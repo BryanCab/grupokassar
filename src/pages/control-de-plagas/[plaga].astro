@@ -145,9 +145,8 @@ const esquema = {
       </div>
       <div class="mt-12 grid gap-5 lg:grid-cols-3 lg:gap-6">
         {
-          bloques.map((b, i) => (
+          bloques.map((b) => (
             <div class:list={['panel !p-7 lg:!p-8', b.inverso && 'panel-inverso']} data-aparece>
-              <span class="panel-numero !text-6xl" aria-hidden="true">0{i + 1}</span>
               <span class="panel-icono"><Icon name={b.icono} class="size-6" /></span>
               <h3 class="mt-5 text-2xl">{b.titulo}</h3>
               <ul class:list={['mt-5 space-y-3 text-[0.95rem]', b.inverso ? 'text-white/80' : 'text-tinta/75']}>
