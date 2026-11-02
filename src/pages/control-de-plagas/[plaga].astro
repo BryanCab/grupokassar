@@ -108,28 +108,31 @@ const esquema = {
         }
       </div>
 
-      <div class="relative" data-aparece>
-        <!-- Bloque dorado desplazado detrás de la foto -->
-        <div class="absolute -right-3 -bottom-3 size-full rounded-sm border-2 border-oro lg:-right-5 lg:-bottom-5" aria-hidden="true"></div>
-        <figure class="relative overflow-hidden rounded-sm bg-tinta shadow-[0_30px_60px_-30px_rgb(11_14_19/0.6)]">
+      <figure class="group relative" data-aparece>
+        <div class="relative">
+        <!-- Esquinas doradas por fuera de la foto -->
+        <span class="pointer-events-none absolute -top-3 -left-3 z-10 size-14 border-t-[5px] border-l-[5px] border-oro lg:-top-4 lg:-left-4 lg:size-20" aria-hidden="true"></span>
+        <span class="pointer-events-none absolute -right-3 -bottom-3 z-10 size-14 border-r-[5px] border-b-[5px] border-oro lg:-right-4 lg:-bottom-4 lg:size-20" aria-hidden="true"></span>
+        <div class="relative overflow-hidden rounded-sm bg-tinta shadow-[0_34px_70px_-34px_rgb(11_14_19/0.55)]">
           {
             foto ? (
-              <Image src={foto} alt={plaga.fotoAlt ?? ''} widths={[480, 800, 1100]} quality={64} sizes="(min-width: 1024px) 50vw, 100vw" class="aspect-[4/3] w-full object-cover" />
+              <Image src={foto} alt={plaga.fotoAlt ?? ''} widths={[480, 800, 1100]} quality={64} sizes="(min-width: 1024px) 50vw, 100vw" class="aspect-[4/3] w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105" />
             ) : (
               <div class="flex aspect-[4/3] items-center justify-center bg-tinta">
                 <Icon name={plaga.icono} class="size-32 text-oro" />
               </div>
             )
           }
-          <span class="pointer-events-none absolute inset-3 border border-white/25" aria-hidden="true"></span>
-          <span class="pointer-events-none absolute top-3 left-3 size-5 border-t-[3px] border-l-[3px] border-oro" aria-hidden="true"></span>
-          <span class="pointer-events-none absolute right-3 bottom-3 size-5 border-r-[3px] border-b-[3px] border-oro" aria-hidden="true"></span>
-          <figcaption class="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-linear-to-t from-tinta via-tinta/70 to-transparent p-6 pt-16 text-white">
-            <span class="max-w-[16rem] text-sm text-white/85">{plaga.fotoAlt}</span>
-            <span class="kicker shrink-0 rounded-full bg-oro px-3 py-1.5 text-[0.65rem] text-tinta">{plaga.nombre}</span>
-          </figcaption>
-        </figure>
-      </div>
+        </div>
+        </div>
+        <figcaption class="mt-8 flex items-stretch gap-4">
+          <span class="w-1 shrink-0 bg-oro" aria-hidden="true"></span>
+          <span class="text-sm leading-snug text-tinta/70">
+            <strong class="kicker block text-tinta">{plaga.nombre}</strong>
+            <span class="mt-1 block">{plaga.fotoAlt}</span>
+          </span>
+        </figcaption>
+      </figure>
     </div>
   </section>
 
