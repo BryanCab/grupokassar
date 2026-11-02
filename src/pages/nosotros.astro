@@ -1,13 +1,14 @@
 ---
+import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import Respaldo from '../components/secciones/Respaldo.astro';
 import LlamadoFinal from '../components/ui/LlamadoFinal.astro';
 
 const pilares = [
-  { titulo: 'Misión', texto: 'Proveer un ambiente saludable y seguro mediante una variedad de productos y servicios que suministran soluciones inteligentes para crear, conservar y preservar entornos limpios.' },
-  { titulo: 'Visión', texto: 'Ofrecer opciones sostenibles y sustentables para mejorar la salud y la vida diaria de las personas, y ser siempre relevantes en sus vidas.' },
-  { titulo: 'Objetivo central', texto: 'Lograr que la marca Kassar sea la opción preferida de todos los sectores económicos, resolviendo las necesidades de nuestros clientes en control de plagas, control de patógenos y sanitización.' },
+  { titulo: 'Misión', icono: 'ph:rocket-launch', lema: 'Crear, conservar y preservar entornos limpios.', texto: 'Proveer un ambiente saludable y seguro mediante una variedad de productos y servicios que suministran soluciones inteligentes.' },
+  { titulo: 'Visión', icono: 'ph:eye', lema: 'Opciones sostenibles para mejorar la salud.', texto: 'Ofrecer opciones sostenibles y sustentables para mejorar la salud y la vida diaria de las personas, y ser siempre relevantes en sus vidas.' },
+  { titulo: 'Objetivo central', icono: 'ph:target', inverso: true, lema: 'La opción preferida de todos los sectores.', texto: 'Lograr que la marca Kassar sea la opción preferida de todos los sectores económicos, resolviendo las necesidades de nuestros clientes en control de plagas, control de patógenos y sanitización.' },
 ];
 ---
 
@@ -15,12 +16,15 @@ const pilares = [
   <Cabecera kicker="Nosotros" titulo="Cuidamos la salud y el medio ambiente" texto="Grupo Kassar es un conjunto de empresas dedicadas al control de plagas, el control de patógenos y la sanitización." />
   <section class="seccion bg-papel">
     <div class="contenedor">
-      <div class="grid gap-px bg-tinta/10 lg:grid-cols-3">
+      <div class="grid gap-5 lg:grid-cols-3 lg:gap-6">
         {
-          pilares.map((p) => (
-            <article class="bg-papel p-6 lg:p-10" data-aparece>
-              <h2 class="text-3xl">{p.titulo}</h2>
-              <p class="mt-4 text-tinta/75">{p.texto}</p>
+          pilares.map((p, i) => (
+            <article class:list={['panel', p.inverso && 'panel-inverso']} data-aparece>
+              <span class="panel-numero" aria-hidden="true">0{i + 1}</span>
+              <span class="panel-icono"><Icon name={p.icono} class="size-6" /></span>
+              <h2 class:list={['kicker mt-6', p.inverso ? 'text-oro' : 'text-oro-oscuro']}>{p.titulo}</h2>
+              <p class="mt-3 font-display text-2xl leading-tight font-bold lg:text-[1.65rem]">{p.lema}</p>
+              <p class:list={['mt-4 text-[0.95rem] leading-relaxed', p.inverso ? 'text-white/75' : 'text-tinta/70']}>{p.texto}</p>
             </article>
           ))
         }

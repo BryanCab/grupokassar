@@ -61,14 +61,15 @@ const esquema = {
     </div>
 
     <div class="contenedor mt-16">
-      <div class="grid gap-px bg-tinta/10 lg:grid-cols-3">
+      <div class="grid gap-5 lg:grid-cols-3 lg:gap-6">
         {
-          bloques.map((b) => (
-            <div class="bg-papel p-6 lg:p-8" data-aparece>
-              <Icon name={b.icono} class="size-8 text-oro-oscuro" />
-              <h2 class="mt-4 text-2xl">{b.titulo}</h2>
-              <ul class="mt-4 space-y-2 text-sm text-tinta/75">
-                {b.lista.map((i) => <li class="flex gap-2"><Icon name="ph:check-circle" class="mt-0.5 size-4 shrink-0 text-oro-oscuro" />{i}</li>)}
+          bloques.map((b, i) => (
+            <div class="panel !p-7" data-aparece>
+              <span class="panel-numero !text-6xl" aria-hidden="true">0{i + 1}</span>
+              <span class="panel-icono"><Icon name={b.icono} class="size-6" /></span>
+              <h2 class="mt-5 text-2xl">{b.titulo}</h2>
+              <ul class="mt-4 space-y-2.5 text-sm text-tinta/75">
+                {b.lista.map((i) => <li class="flex gap-2.5"><Icon name="ph:check-circle-fill" class="mt-0.5 size-4 shrink-0 text-oro" />{i}</li>)}
               </ul>
             </div>
           ))

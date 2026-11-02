@@ -80,6 +80,40 @@
   .btn-wa {
     @apply bg-[#25d366] text-tinta shadow-lg shadow-[#25d366]/25 hover:bg-[#1ebe5a];
   }
+  /* Tarjeta de contenido: borde, acento dorado superior que crece y elevación al pasar */
+  .panel {
+    @apply relative overflow-hidden rounded-sm border border-tinta/10 bg-white p-7 shadow-sm transition duration-300 lg:p-9;
+  }
+  .panel::before {
+    content: '';
+    @apply absolute inset-x-0 top-0 h-1 origin-left scale-x-[.18] bg-oro transition-transform duration-500;
+  }
+  .panel:hover {
+    @apply -translate-y-1.5 border-oro/60 shadow-[0_26px_50px_-26px_rgb(11_14_19/0.4)];
+  }
+  .panel:hover::before {
+    @apply scale-x-100;
+  }
+  .panel-inverso {
+    @apply border-linea bg-tinta text-white;
+  }
+  .panel-inverso:hover {
+    @apply border-oro/70;
+  }
+  .panel-icono {
+    @apply grid size-12 place-items-center rounded-full bg-oro/20 text-oro-oscuro transition-colors duration-300;
+  }
+  .panel:hover .panel-icono {
+    @apply bg-oro text-tinta;
+  }
+  .panel-inverso .panel-icono {
+    @apply bg-oro text-tinta;
+  }
+  /* Número grande en contorno, de fondo */
+  .panel-numero {
+    -webkit-text-stroke: 1px color-mix(in srgb, var(--color-oro) 55%, transparent);
+    @apply pointer-events-none absolute top-3 right-5 font-display text-7xl leading-none font-bold text-transparent select-none lg:text-8xl;
+  }
   .btn-tinta {
     @apply bg-tinta text-white hover:bg-cafe;
   }
