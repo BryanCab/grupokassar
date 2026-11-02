@@ -71,3 +71,10 @@ export const clientes = [
   { archivo: 'bigol-bagel', nombre: 'Bigol Bagel' },
   { archivo: 'cotidiano', nombre: 'Cotidiano' },
 ];
+
+export const pasosTrabajo = [
+  { titulo: 'Inspección', texto: 'Es el paso fundamental: recorremos tus instalaciones e identificamos los problemas que afectan su buen funcionamiento.' },
+  { titulo: 'Indicadores de riesgo', texto: 'Localizamos lo que permite el ingreso, refugio, desarrollo y proliferación de cualquier tipo de plaga.' },
+  { titulo: 'Procedimiento adecuado', texto: 'Elegimos la técnica y el producto para cada caso, cuidando la salud de quienes usan el lugar.' },
+  { titulo: 'Soporte técnico', texto: 'Asignamos personal exclusivo al proyecto y capacitamos a tu equipo para mantener el control.' },
+];
