@@ -64,7 +64,7 @@ export const respaldo = [
 export const clientes = [
   { archivo: 'toray', nombre: 'Toray' },
   { archivo: 'hospital-real-san-lucas', nombre: 'Hospital Real San Lucas' },
-  { archivo: 'travalex', nombre: 'Travalex', fondo: '#000' },
+  { archivo: 'travalex', nombre: 'Travalex' },
   { archivo: 'arvensse', nombre: 'Arvensse' },
   { archivo: 'la-flor-de-cordoba', nombre: 'La Flor de Córdoba' },
   { archivo: 'brisket-house', nombre: 'Brisket House' },
