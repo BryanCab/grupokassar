@@ -14,15 +14,17 @@ const pilares = [
 <Base titulo="Nosotros" descripcion="Grupo Kassar es un conjunto de empresas enfocadas al cuidado de la salud y del medio ambiente mediante control de plagas, control de patógenos y sanitización.">
   <Cabecera kicker="Nosotros" titulo="Cuidamos la salud y el medio ambiente" texto="Grupo Kassar es un conjunto de empresas dedicadas al control de plagas, el control de patógenos y la sanitización." />
   <section class="seccion bg-papel">
-    <div class="contenedor grid gap-px bg-tinta/10 lg:grid-cols-3">
-      {
-        pilares.map((p) => (
-          <article class="bg-papel p-6 lg:p-10" data-aparece>
-            <h2 class="text-3xl">{p.titulo}</h2>
-            <p class="mt-4 text-tinta/75">{p.texto}</p>
-          </article>
-        ))
-      }
+    <div class="contenedor">
+      <div class="grid gap-px bg-tinta/10 lg:grid-cols-3">
+        {
+          pilares.map((p) => (
+            <article class="bg-papel p-6 lg:p-10" data-aparece>
+              <h2 class="text-3xl">{p.titulo}</h2>
+              <p class="mt-4 text-tinta/75">{p.texto}</p>
+            </article>
+          ))
+        }
+      </div>
     </div>
   </section>
   <Respaldo />
