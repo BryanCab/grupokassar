@@ -27,9 +27,9 @@ import { fotoDe } from '../../data/fotos';
             <li data-categoria={p.categoria} data-aparece>
               <a href={enlace(`/control-de-plagas/${p.slug}/`)} class="tarjeta-plaga group relative block aspect-square overflow-hidden bg-tinta text-white">
                 {foto ? (
-                  <Image src={foto} alt={p.fotoAlt ?? ''} widths={[320, 480, 640]} sizes="(min-width: 1024px) 25vw, 50vw" class="foto-plaga absolute inset-0 size-full object-cover" />
+                  <Image src={foto} alt={p.fotoAlt ?? ''} widths={[320, 480, 640]} quality={62} sizes="(min-width: 1024px) 25vw, 50vw" class="foto-plaga absolute inset-0 size-full object-cover" />
                 ) : (
-                  <Icon name={p.icono} class="absolute top-1/2 left-1/2 size-24 -translate-x-1/2 -translate-y-1/2 text-linea transition-colors group-hover:text-oro" />
+                  <Icon name={p.icono} class="absolute top-1/2 left-1/2 size-24 -translate-x-1/2 -translate-y-1/2 text-linea transition-colors group-hover:text-oro group-[.activa]:text-oro" />
                 )}
                 <span class="absolute inset-0 bg-linear-to-t from-tinta via-tinta/20 to-transparent" />
                 <span class="absolute inset-x-0 bottom-0 p-4 lg:p-5">
@@ -63,6 +63,15 @@ import { fotoDe } from '../../data/fotos';
 </style>
 
 <script>
+  // En pantallas táctiles no existe el hover: las tarjetas que cruzan el centro de la pantalla toman color
+  if (matchMedia('(hover: none)').matches) {
+    const observador = new IntersectionObserver(
+      (entradas) => entradas.forEach((e) => e.target.classList.toggle('activa', e.isIntersecting)),
+      { rootMargin: '-30% 0px -30% 0px' },
+    );
+    document.querySelectorAll('.tarjeta-plaga').forEach((t) => observador.observe(t));
+  }
+
   const botones = document.querySelectorAll<HTMLButtonElement>('[data-filtro]');
   const tarjetas = document.querySelectorAll<HTMLElement>('[data-categoria]');
   botones.forEach((b) =>

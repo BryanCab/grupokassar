@@ -113,6 +113,8 @@ export const plagas: Plaga[] = [
     nombre: 'Termitas',
     categoria: 'especializados',
     icono: 'ph:house-line',
+    foto: 'termitas',
+    fotoAlt: 'Termitas obreras y soldados de cerca',
     resumen: 'Madera seca y subterránea, en pre y post construcción.',
     descripcion:
       'Las termitas pueden dañar la madera durante mucho tiempo sin ser vistas. Atendemos termita de madera seca y subterránea, tanto en obra nueva como en construcciones existentes.',
@@ -154,6 +156,8 @@ export const plagas: Plaga[] = [
     nombre: 'Aves',
     categoria: 'especializados',
     icono: 'ph:bird',
+    foto: 'aves',
+    fotoAlt: 'Paloma doméstica sobre piso de adoquín',
     resumen: 'Control de palomas y otras aves en edificios y naves.',
     descripcion:
       'Las aves anidan en cornisas, estructuras y naves industriales. Su excremento deteriora superficies y ensucia áreas de trabajo, por lo que el objetivo es alejarlas sin lastimarlas.',

@@ -52,7 +52,7 @@ const puntos = [
       </defs>
       <use href="#plano" stroke="#2c3543"></use>
       <use href="#plano" stroke="#f5b81f" clip-path="url(#zona-revelada)"></use>
-      <rect data-escaner class="hidden lg:block" x="-70" y="0" width="70" height="520" fill="url(#haz)"></rect>
+      <rect data-escaner x="-70" y="0" width="70" height="520" fill="url(#haz)"></rect>
       {
         puntos.map((p) => (
           <g data-punto>
@@ -67,7 +67,7 @@ const puntos = [
 </section>
 
 <script>
-  // Sin movimiento (o en móvil) el plano completo queda visible desde el inicio
+  // Sin movimiento el plano completo queda visible; con movimiento arranca oculto y se revela al animarse
   const r = document.querySelector('[data-revelado]');
-  if (r && innerWidth >= 1024 && !matchMedia('(prefers-reduced-motion: reduce)').matches) r.setAttribute('width', '0');
+  if (r && !matchMedia('(prefers-reduced-motion: reduce)').matches) r.setAttribute('width', '0');
 </script>

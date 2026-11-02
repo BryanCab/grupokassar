@@ -28,7 +28,7 @@ import { logoCliente } from '../../data/fotos';
       <ul class="mt-6 grid grid-cols-2 gap-px bg-tinta/10 sm:grid-cols-4">
         {
           clientes.map((c) => (
-            <li class="flex h-32 items-center justify-center bg-white p-3">
+            <li class="flex h-32 items-center justify-center bg-white p-3" style={c.fondo ? `background:${c.fondo}` : undefined}>
               <Image src={logoCliente(c.archivo)} alt={c.nombre} class="max-h-full max-w-full object-contain" loading="lazy" />
             </li>
           ))

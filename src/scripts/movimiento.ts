@@ -67,4 +67,32 @@ function iniciarRecorrido() {
       linea.to(paso, { autoAlpha: 1, y: 0, duration: 0.4 }, momento + 0.1);
     });
   });
+
+  // En móvil no hay pin: el plano se anima solo, en bucle, mientras está a la vista
+  gsap.matchMedia().add('(max-width: 1023px)', () => {
+    const svg = seccion.querySelector('svg');
+    const puntos = gsap.utils.toArray<SVGGElement>('[data-punto]', seccion);
+    const barra = seccion.querySelector('[data-escaner]');
+    const revelado = seccion.querySelector('[data-revelado]');
+    const progreso = seccion.querySelector('[data-progreso]');
+    const riesgos = seccion.querySelectorAll('[data-riesgo]');
+    if (!svg) return;
+
+    const linea = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 2.5, defaults: { ease: 'none' } });
+    linea
+      .set(revelado, { attr: { width: 0 } }, 0)
+      .set(barra, { attr: { x: -70 } }, 0)
+      .set(progreso, { scaleX: 0 }, 0)
+      .set(riesgos, { attr: { fill: '#e5484d' } }, 0)
+      .set(puntos, { autoAlpha: 0, scale: 0, transformOrigin: 'center' }, 0);
+
+    linea.to(barra, { attr: { x: 800 }, duration: 3.2 }, 0).to(revelado, { attr: { width: 800 }, duration: 3.2 }, 0);
+    linea.to(progreso, { scaleX: 1, duration: 6 }, 0);
+    puntos.forEach((p, i) => linea.to(p, { autoAlpha: 1, scale: 1, duration: 0.3, ease: 'back.out(2)' }, 0.6 + i * 0.45));
+    linea.to(riesgos, { attr: { fill: '#f5b81f' }, duration: 0.5 }, 4);
+    linea.to({}, { duration: 1.5 });
+
+    const disparador = ScrollTrigger.create({ trigger: svg, start: 'top 85%', end: 'bottom 15%', onToggle: (self) => (self.isActive ? linea.play() : linea.pause()) });
+    return () => disparador.kill();
+  });
 }

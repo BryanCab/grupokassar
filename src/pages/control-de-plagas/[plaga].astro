@@ -51,7 +51,7 @@ const esquema = {
       </div>
       {
         foto ? (
-          <Image src={foto} alt={plaga.fotoAlt ?? ''} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 50vw, 100vw" class="aspect-[4/3] w-full rounded-sm object-cover" data-aparece />
+          <Image src={foto} alt={plaga.fotoAlt ?? ''} widths={[480, 800, 1100]} quality={62} sizes="(min-width: 1024px) 50vw, 100vw" class="aspect-[4/3] w-full rounded-sm object-cover" data-aparece />
         ) : (
           <div class="flex aspect-[4/3] items-center justify-center rounded-sm bg-tinta" data-aparece>
             <Icon name={plaga.icono} class="size-32 text-oro" />
