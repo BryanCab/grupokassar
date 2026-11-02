@@ -1,0 +1,134 @@
+---
+import { Icon } from 'astro-icon/components';
+import { plagas } from '../../data/plagas';
+import { sectores } from '../../data/sectores';
+import { sucursales, enlace } from '../../data/sitio';
+
+const servicios = [...plagas.map((p) => p.nombre), 'Control de patógenos', 'Sanitización', 'Lavado y desinfección de textiles', 'No estoy seguro'];
+---
+
+<form id="cotizador" class="rounded-sm border border-linea bg-tinta p-5 text-white sm:p-8" novalidate data-whatsapp-gdl={sucursales[0].whatsapp} data-whatsapp-baja={sucursales[1].whatsapp}>
+  <div class="mb-6 flex items-center gap-2" aria-hidden="true">
+    <span data-indicador class="h-1 flex-1 bg-oro"></span>
+    <span data-indicador class="h-1 flex-1 bg-linea"></span>
+    <span data-indicador class="h-1 flex-1 bg-linea"></span>
+  </div>
+
+  <fieldset data-etapa class="grid gap-4">
+    <legend class="font-display text-xl font-bold">1. ¿Qué necesitas?</legend>
+    <label class="grid gap-2 text-sm">
+      Servicio
+      <select name="servicio" class="campo" required>
+        <option value="">Selecciona una opción</option>
+        {servicios.map((s) => <option>{s}</option>)}
+      </select>
+    </label>
+    <div class="grid gap-2 text-sm">
+      <span>Tipo de lugar</span>
+      <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {
+          sectores.map((s) => (
+            <label class="opcion">
+              <input type="radio" name="sector" value={s.nombre} class="sr-only" required />
+              <Icon name={s.icono} class="size-5 shrink-0" />
+              {s.nombre}
+            </label>
+          ))
+        }
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset data-etapa class="grid gap-4">
+    <legend class="font-display text-xl font-bold">2. ¿Dónde?</legend>
+    <div class="grid gap-2 text-sm">
+      <span>Ciudad o región</span>
+      <div class="grid gap-2 sm:grid-cols-3">
+        <label class="opcion"><input type="radio" name="zona" value="Guadalajara" class="sr-only" required />Guadalajara</label>
+        <label class="opcion"><input type="radio" name="zona" value="Ensenada" class="sr-only" required />Ensenada</label>
+        <label class="opcion"><input type="radio" name="zona" value="Otra ciudad" class="sr-only" required />Otra ciudad</label>
+      </div>
+    </div>
+    <label class="grid gap-2 text-sm">
+      Detalles (opcional)
+      <textarea name="mensaje" rows="4" maxlength="1000" class="campo" placeholder="Superficie aproximada, urgencia, qué has observado…"></textarea>
+    </label>
+  </fieldset>
+
+  <fieldset data-etapa class="grid gap-4">
+    <legend class="font-display text-xl font-bold">3. ¿Cómo te contactamos?</legend>
+    <label class="grid gap-2 text-sm">Nombre<input name="nombre" class="campo" autocomplete="name" maxlength="100" required /></label>
+    <label class="grid gap-2 text-sm">Teléfono<input name="telefono" type="tel" class="campo" autocomplete="tel" inputmode="tel" maxlength="20" required /></label>
+    <label class="flex items-start gap-3 text-sm text-white/80">
+      <input type="checkbox" name="privacidad" class="mt-1 size-5 accent-[#f5b81f]" required />
+      <span>Acepto el <a href={enlace('/aviso-de-privacidad/')} class="underline">aviso de privacidad</a>.</span>
+    </label>
+  </fieldset>
+
+  <p id="cotizador-estado" role="status" class="mt-4 min-h-6 text-sm text-oro"></p>
+
+  <div class="mt-2 flex flex-wrap items-center justify-between gap-3">
+    <button type="button" id="cotizador-atras" class="btn btn-linea" hidden>Atrás</button>
+    <button type="button" id="cotizador-siguiente" class="btn btn-oro ml-auto">Continuar <Icon name="ph:arrow-right" class="size-4" /></button>
+    <button type="submit" id="cotizador-enviar" class="btn btn-wa ml-auto w-full sm:w-auto" hidden><Icon name="simple-icons:whatsapp" class="size-5" /> Enviar por WhatsApp</button>
+  </div>
+</form>
+
+<script>
+  const form = document.getElementById('cotizador') as HTMLFormElement;
+  const etapas = [...form.querySelectorAll<HTMLFieldSetElement>('[data-etapa]')];
+  const indicadores = form.querySelectorAll<HTMLElement>('[data-indicador]');
+  const estado = document.getElementById('cotizador-estado')!;
+  const atras = document.getElementById('cotizador-atras') as HTMLButtonElement;
+  const siguiente = document.getElementById('cotizador-siguiente') as HTMLButtonElement;
+  const enviar = document.getElementById('cotizador-enviar') as HTMLButtonElement;
+
+  let actual = 0;
+
+  const mostrar = (i: number) => {
+    actual = i;
+    etapas.forEach((e, n) => (e.hidden = n !== i));
+    indicadores.forEach((b, n) => {
+      b.classList.toggle('bg-oro', n <= i);
+      b.classList.toggle('bg-linea', n > i);
+    });
+    atras.hidden = i === 0;
+    siguiente.hidden = i === etapas.length - 1;
+    enviar.hidden = i !== etapas.length - 1;
+    estado.textContent = '';
+  };
+
+  const valida = (etapa: HTMLFieldSetElement) => {
+    for (const campo of etapa.querySelectorAll<HTMLInputElement>('input, select, textarea')) {
+      if (!campo.checkValidity()) {
+        estado.textContent = campo.type === 'radio' ? 'Selecciona una opción para continuar.' : campo.type === 'checkbox' ? 'Necesitamos que aceptes el aviso de privacidad.' : 'Revisa los campos marcados como obligatorios.';
+        campo.focus();
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const mensajeWhatsapp = (d: Record<string, string>) =>
+    [`Hola, soy ${d.nombre}. Quiero una cotización.`, `Teléfono: ${d.telefono}`, `Servicio: ${d.servicio}`, `Lugar: ${d.sector}`, `Zona: ${d.zona}`, d.mensaje && `Detalles: ${d.mensaje}`].filter(Boolean).join('\n');
+
+  siguiente.addEventListener('click', () => {
+    if (valida(etapas[actual])) mostrar(actual + 1);
+  });
+  atras.addEventListener('click', () => mostrar(actual - 1));
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!valida(etapas[actual])) return;
+    const datos = Object.fromEntries(new FormData(form)) as Record<string, string>;
+    const numero = datos.zona === 'Ensenada' ? form.dataset.whatsappBaja : form.dataset.whatsappGdl;
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensajeWhatsapp(datos))}`;
+    // Si el navegador bloquea la ventana nueva, se abre en la misma pestaña
+    if (!window.open(url, '_blank', 'noopener')) location.href = url;
+    estado.textContent = 'Abrimos WhatsApp con tu solicitud. Solo falta que presiones enviar.';
+  });
+
+  const servicio = new URLSearchParams(location.search).get('servicio');
+  if (servicio) form.querySelector<HTMLSelectElement>('[name=servicio]')!.value = servicio;
+  mostrar(0);
+</script>

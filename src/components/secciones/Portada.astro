@@ -1,0 +1,40 @@
+---
+import { enlace } from '../../data/sitio';
+import aguila from '../../assets/marca/aguila-grupo-kassar.svg?url';
+---
+
+<section class="relative isolate flex min-h-svh items-end overflow-hidden bg-tinta text-white lg:items-center">
+  <div class="absolute inset-0 -z-10 bg-[radial-gradient(60%_70%_at_72%_45%,#1e2530_0%,transparent_70%)]"></div>
+
+  <img
+    id="aguila-respaldo"
+    src={aguila}
+    alt=""
+    width="760"
+    height="625"
+    class="absolute top-[9%] left-1/2 -z-10 w-[56vw] max-w-sm -translate-x-1/2 transition-opacity duration-700 lg:top-1/2 lg:left-auto lg:right-[6%] lg:w-[42vw] lg:max-w-2xl lg:translate-x-0 lg:-translate-y-1/2"
+  />
+  <canvas id="enjambre" class="absolute inset-0 -z-10 size-full" aria-hidden="true"></canvas>
+
+  <div class="contenedor pt-[38svh] pb-20 lg:pt-28 lg:pb-16">
+    <div class="max-w-2xl">
+      <p class="kicker text-oro">Plagas · Patógenos · Sanitización</p>
+      <h1 class="mt-4 text-[2.5rem] sm:text-6xl lg:text-[4.75rem]">Protegemos lo que importa, antes de que sea un problema.</h1>
+      <p class="mt-5 max-w-lg text-white/75 lg:text-lg">Cuidamos la salud de empresas y hogares con técnicos certificados, productos con registro Cofepris y servicio las 24 horas, los 365 días del año.</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href={enlace('/contacto/')} class="btn btn-oro">Solicitar cotización</a>
+        <a href={enlace('/control-de-plagas/')} class="btn btn-linea">Ver servicios</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { iniciarParticulas } from '../../scripts/particulas';
+
+  const lienzo = document.getElementById('enjambre') as HTMLCanvasElement;
+  const respaldo = document.getElementById('aguila-respaldo') as HTMLElement;
+  const arrancar = () => iniciarParticulas(lienzo, respaldo).catch(() => (respaldo.style.opacity = '1'));
+  if ('requestIdleCallback' in window) requestIdleCallback(arrancar, { timeout: 800 });
+  else setTimeout(arrancar, 200);
+</script>

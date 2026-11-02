@@ -1,0 +1,42 @@
+---
+import { enlace } from '../data/sitio';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Cabecera from '../components/ui/Cabecera.astro';
+import LlamadoFinal from '../components/ui/LlamadoFinal.astro';
+import logo from '../assets/marca/logo-kassar-good-washed.png';
+
+const servicios = [
+  { icono: 'ph:virus', titulo: 'Control de patógenos', texto: 'Servicios para ayudar a mantener entornos más seguros para las personas que los usan.' },
+  { icono: 'ph:sparkle', titulo: 'Sanitización', texto: 'Sanitización de espacios para conservar y preservar entornos limpios.' },
+  { icono: 'ph:t-shirt', titulo: 'Lavado y desinfección de textiles', texto: 'Atención de textiles de fibra sintética y natural.' },
+];
+---
+
+<Base titulo="Control de patógenos y sanitización" descripcion="Kassar Good Washed: control de patógenos, sanitización de espacios y lavado y desinfección de textiles para empresas y hogares.">
+  <Cabecera color="azul" kicker="Kassar Good Washed" titulo="Control de patógenos y sanitización" texto="Soluciones para crear, conservar y preservar entornos limpios, saludables y seguros.">
+    <a href={enlace('/contacto/?servicio=Control%20de%20pat%C3%B3genos')} class="btn mt-8 bg-white text-azul hover:bg-azul-claro">Solicitar cotización</a>
+  </Cabecera>
+
+  <section class="seccion bg-papel">
+    <div class="contenedor grid gap-12 lg:grid-cols-[1fr_2fr]">
+      <div data-aparece>
+        <div class="w-52 bg-white p-4"><Image src={logo} alt="Logotipo de Kassar Good Washed" width="320" /></div>
+      </div>
+      <ul class="grid gap-px bg-tinta/10 sm:grid-cols-3">
+        {
+          servicios.map((s) => (
+            <li class="bg-papel p-6" data-aparece>
+              <Icon name={s.icono} class="size-9 text-azul" />
+              <h2 class="mt-4 text-xl">{s.titulo}</h2>
+              <p class="mt-2 text-sm text-tinta/70">{s.texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <LlamadoFinal titulo="¿Necesitas sanitizar tus instalaciones?" />
+</Base>

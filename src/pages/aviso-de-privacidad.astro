@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabecera from '../components/ui/Cabecera.astro';
+import { sucursales } from '../data/sitio';
+---
+
+<Base titulo="Aviso de privacidad" descripcion="Aviso de privacidad de Grupo Kassar.">
+  <Cabecera kicker="Legal" titulo="Aviso de privacidad" />
+  <section class="seccion bg-papel">
+    <div class="contenedor max-w-3xl space-y-6 text-tinta/80">
+      <p>Grupo Kassar, con domicilio en {sucursales[0].calle}, {sucursales[0].colonia}, C.P. {sucursales[0].cp}, {sucursales[0].ciudad}, {sucursales[0].estado}, es responsable del tratamiento de los datos personales que nos proporcionas.</p>
+      <h2 class="text-2xl text-tinta">Datos que recabamos</h2>
+      <p>A través del formulario de cotización recabamos tu nombre, teléfono y los detalles que decidas compartir sobre el servicio que necesitas.</p>
+      <h2 class="text-2xl text-tinta">Finalidad</h2>
+      <p>El formulario no almacena información en este sitio: prepara un mensaje que se envía a nuestro WhatsApp Business solo cuando tú decides enviarlo. Usamos estos datos únicamente para atender tu solicitud, contactarte y enviarte la cotización correspondiente.</p>
+      <h2 class="text-2xl text-tinta">Derechos ARCO</h2>
+      <p>Puedes solicitar el acceso, rectificación, cancelación u oposición al tratamiento de tus datos escribiendo a <a class="underline" href={`mailto:${sucursales[0].correo}`}>{sucursales[0].correo}</a>.</p>
+    </div>
+  </section>
+</Base>

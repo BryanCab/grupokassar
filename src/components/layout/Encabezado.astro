@@ -1,0 +1,73 @@
+---
+import { Icon } from 'astro-icon/components';
+import { navegacion, enlace } from '../../data/sitio';
+import aguila from '../../assets/marca/aguila-grupo-kassar.svg?url';
+
+const ruta = Astro.url.pathname;
+---
+
+<header id="encabezado" class="fixed inset-x-0 top-0 z-50 border-b border-transparent text-white transition-colors duration-300">
+  <div class="contenedor flex h-18 items-center justify-between gap-6">
+    <a href={enlace('/')} class="flex shrink-0 items-center gap-3" aria-label="Grupo Kassar, inicio">
+      <img src={aguila} alt="" width="44" height="36" class="h-9 w-auto" />
+      <span class="font-display text-lg leading-none font-bold tracking-tight">Grupo Kassar</span>
+    </a>
+
+    <nav aria-label="Principal" class="hidden items-center gap-7 lg:flex">
+      {
+        navegacion.map((n) => (
+          <a href={n.href} aria-current={ruta.startsWith(n.href) ? 'page' : undefined} class="text-sm text-white/80 transition-colors hover:text-oro aria-[current=page]:text-oro">
+            {n.nombre}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href={enlace('/contacto/')} class="btn btn-oro hidden sm:inline-flex">Solicitar cotización</a>
+      <button id="menu-abrir" type="button" class="flex size-12 items-center justify-center lg:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-movil">
+        <Icon name="ph:list" class="size-7" />
+      </button>
+    </div>
+  </div>
+
+  <nav id="menu-movil" aria-label="Móvil" hidden class="border-t border-linea bg-tinta lg:hidden">
+    <div class="contenedor flex flex-col py-4">
+      {
+        navegacion.map((n) => (
+          <a href={n.href} class="flex min-h-12 items-center border-b border-linea/60 font-display text-lg">
+            {n.nombre}
+          </a>
+        ))
+      }
+      <a href={enlace('/contacto/')} class="btn btn-oro mt-4">Solicitar cotización</a>
+    </div>
+  </nav>
+</header>
+
+<style>
+  header[data-solido] {
+    background: var(--color-tinta);
+    border-color: var(--color-linea);
+  }
+</style>
+
+<script>
+  const encabezado = document.getElementById('encabezado')!;
+  const boton = document.getElementById('menu-abrir')!;
+  const menu = document.getElementById('menu-movil')!;
+
+  const actualizar = () => {
+    const solido = window.scrollY > 40 || !menu.hidden;
+    encabezado.toggleAttribute('data-solido', solido);
+  };
+  addEventListener('scroll', actualizar, { passive: true });
+  // Leer scrollY de inmediato forzaría un cálculo de diseño durante la carga
+  requestAnimationFrame(actualizar);
+
+  boton.addEventListener('click', () => {
+    menu.hidden = !menu.hidden;
+    boton.setAttribute('aria-expanded', String(!menu.hidden));
+    actualizar();
+  });
+</script>

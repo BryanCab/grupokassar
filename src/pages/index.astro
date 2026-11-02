@@ -1,0 +1,53 @@
+---
+import { enlace } from '../data/sitio';
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Portada from '../components/secciones/Portada.astro';
+import Marcas from '../components/secciones/Marcas.astro';
+import Recorrido from '../components/secciones/Recorrido.astro';
+import Plagas from '../components/secciones/Plagas.astro';
+import Respaldo from '../components/secciones/Respaldo.astro';
+import LlamadoFinal from '../components/ui/LlamadoFinal.astro';
+import { sectores } from '../data/sectores';
+
+const datos = ['Servicio 24/7, los 365 días', 'Productos con registro Cofepris', 'Seguro de responsabilidad civil', 'Cobertura nacional'];
+---
+
+<Base titulo="Grupo Kassar | Control de plagas y patógenos en Guadalajara y Ensenada">
+  <Portada />
+
+  <section class="border-y border-linea bg-grafito text-white" aria-label="Garantías">
+    <ul class="contenedor grid grid-cols-2 gap-x-6 gap-y-3 py-5 text-sm lg:grid-cols-4">
+      {datos.map((d) => <li class="flex items-center gap-2"><Icon name="ph:check-circle" class="size-5 shrink-0 text-oro" />{d}</li>)}
+    </ul>
+  </section>
+
+  <Marcas />
+  <Recorrido />
+  <Plagas />
+
+  <section class="seccion diferida bg-tinta text-white">
+    <div class="contenedor">
+      <div data-aparece>
+        <p class="kicker text-oro">Sectores</p>
+        <h2 class="titulo mt-3 max-w-3xl">Cada espacio tiene sus propios riesgos.</h2>
+      </div>
+      <ul class="mt-12 grid gap-px bg-linea sm:grid-cols-2 lg:grid-cols-3">
+        {
+          sectores.map((s) => (
+            <li class="bg-tinta" data-aparece>
+              <a href={enlace(`/sectores/${s.slug}/`)} class="group block h-full p-6 transition-colors hover:bg-grafito lg:p-8">
+                <Icon name={s.icono} class="size-9 text-oro" />
+                <h3 class="mt-5 text-2xl">{s.nombre}</h3>
+                <p class="mt-2 text-sm text-niebla">{s.resumen}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <Respaldo />
+  <LlamadoFinal />
+</Base>

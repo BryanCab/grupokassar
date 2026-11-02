@@ -1,0 +1,48 @@
+---
+import { enlace } from '../../data/sitio';
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import LlamadoFinal from '../../components/ui/LlamadoFinal.astro';
+import { sectores, type Sector } from '../../data/sectores';
+import { plagas } from '../../data/plagas';
+
+export function getStaticPaths() {
+  return sectores.map((sector) => ({ params: { sector: sector.slug }, props: { sector } }));
+}
+
+const { sector } = Astro.props as { sector: Sector };
+const frecuentes = plagas.filter((p) => sector.plagas.includes(p.slug));
+---
+
+<Base titulo={`Control de plagas para el sector ${sector.nombre.toLowerCase()}`} descripcion={`${sector.resumen} Servicio de Grupo Kassar con cobertura nacional y atención 24/7.`}>
+  <Cabecera kicker="Sectores" titulo={`Sector ${sector.nombre.toLowerCase()}`} texto={sector.resumen}>
+    <a href={enlace('/contacto/')} class="btn btn-oro mt-8">Solicitar cotización</a>
+  </Cabecera>
+  <section class="seccion bg-papel">
+    <div class="contenedor grid gap-12 lg:grid-cols-2">
+      <div data-aparece>
+        <h2 class="text-3xl">Retos frecuentes</h2>
+        <ul class="mt-5 space-y-3">
+          {sector.retos.map((r) => <li class="flex gap-3"><Icon name="ph:check-circle" class="mt-0.5 size-5 shrink-0 text-oro-oscuro" />{r}</li>)}
+        </ul>
+      </div>
+      <div data-aparece>
+        <h2 class="text-3xl">Plagas más comunes</h2>
+        <ul class="mt-5 grid gap-px bg-tinta/10">
+          {
+            frecuentes.map((p) => (
+              <li class="bg-papel">
+                <a href={enlace(`/control-de-plagas/${p.slug}/`)} class="flex min-h-14 items-center justify-between gap-4 py-2 hover:text-oro-oscuro">
+                  <span class="font-display text-lg font-semibold">{p.nombre}</span>
+                  <Icon name="ph:arrow-right" class="size-5" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+  <LlamadoFinal />
+</Base>

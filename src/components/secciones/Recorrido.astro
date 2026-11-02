@@ -1,0 +1,73 @@
+---
+const pasos = [
+  { titulo: 'Inspección', texto: 'Es el paso fundamental: recorremos tus instalaciones e identificamos los problemas que afectan su buen funcionamiento.' },
+  { titulo: 'Indicadores de riesgo', texto: 'Localizamos lo que permite el ingreso, refugio, desarrollo y proliferación de cualquier tipo de plaga.' },
+  { titulo: 'Procedimiento adecuado', texto: 'Elegimos la técnica y el producto para cada caso, cuidando la salud de quienes usan el lugar.' },
+  { titulo: 'Soporte técnico', texto: 'Asignamos personal exclusivo al proyecto y capacitamos a tu equipo para mantener el control.' },
+];
+
+const puntos = [
+  { x: 330, y: 92, texto: 'Aves y murciélagos' },
+  { x: 205, y: 262, texto: 'Cucarachas' },
+  { x: 560, y: 262, texto: 'Chinches' },
+  { x: 402, y: 345, texto: 'Termitas' },
+  { x: 250, y: 452, texto: 'Roedores' },
+  { x: 700, y: 446, texto: 'Alacranes' },
+];
+---
+
+<section data-recorrido class="relative flex min-h-svh items-center overflow-hidden bg-tinta py-20 text-white lg:py-0">
+  <div class="contenedor grid items-center gap-12 lg:grid-cols-[2fr_3fr]">
+    <div>
+      <p class="kicker text-oro">Cómo trabajamos</p>
+      <h2 class="titulo mt-3">Encontramos lo que no se ve.</h2>
+      <div class="mt-8 h-px w-full bg-linea"><div data-progreso class="h-px origin-left scale-x-0 bg-oro"></div></div>
+      <ol class="relative mt-8 grid gap-8 lg:min-h-44 lg:gap-0">
+        {
+          pasos.map((p, i) => (
+            <li data-paso class="lg:col-start-1 lg:row-start-1">
+              <p class="kicker text-niebla">Paso {i + 1} de {pasos.length}</p>
+              <h3 class="mt-2 text-2xl lg:text-3xl">{p.titulo}</h3>
+              <p class="mt-3 max-w-md text-white/70">{p.texto}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <svg viewBox="0 0 800 520" class="w-full" role="img" aria-label="Corte de una casa con los lugares donde suelen esconderse las plagas: techo, cocina, recámara, muros, cimientos y jardín.">
+      <defs>
+        <g id="plano" fill="none" stroke-width="2" stroke-linejoin="round">
+          <path d="M100 196 L400 40 L700 196" />
+          <path d="M130 196 H670 V410 H130 Z" />
+          <path d="M400 196 V410 M130 300 H670" />
+          <path d="M40 410 H770 M130 410 V486 H670 V410" />
+          <path d="M170 300 V252 H250 V300 M180 262 H240 M450 300 V270 H640 V300 M450 282 H640" />
+          <path d="M170 410 V340 H250 V410 M470 340 H600 V390 H470 Z M535 340 V390" />
+          <path d="M300 410 V486 M500 410 V486" stroke-dasharray="6 6" />
+          <path d="M700 410 q-6 -22 -2 -40 q8 16 6 40 M730 410 q6 -28 2 -52 q-12 20 -8 52" />
+        </g>
+        <clipPath id="zona-revelada"><rect data-revelado x="0" y="0" width="800" height="520"></rect></clipPath>
+        <linearGradient id="haz" x1="0" x2="1"><stop offset="0" stop-color="#f5b81f" stop-opacity="0"></stop><stop offset="1" stop-color="#f5b81f" stop-opacity=".35"></stop></linearGradient>
+      </defs>
+      <use href="#plano" stroke="#2c3543"></use>
+      <use href="#plano" stroke="#f5b81f" clip-path="url(#zona-revelada)"></use>
+      <rect data-escaner class="hidden lg:block" x="-70" y="0" width="70" height="520" fill="url(#haz)"></rect>
+      {
+        puntos.map((p) => (
+          <g data-punto>
+            <circle data-riesgo cx={p.x} cy={p.y} r="8" fill="#e5484d" />
+            <circle cx={p.x} cy={p.y} r="15" fill="none" stroke="#f4f2ec" stroke-opacity=".4" />
+            <text x={p.x > 650 ? p.x - 22 : p.x + 22} y={p.y + 6} text-anchor={p.x > 650 ? 'end' : 'start'} fill="#f4f2ec" class="text-[25px] font-semibold lg:text-[15px]">{p.texto}</text>
+          </g>
+        ))
+      }
+    </svg>
+  </div>
+</section>
+
+<script>
+  // Sin movimiento (o en móvil) el plano completo queda visible desde el inicio
+  const r = document.querySelector('[data-revelado]');
+  if (r && innerWidth >= 1024 && !matchMedia('(prefers-reduced-motion: reduce)').matches) r.setAttribute('width', '0');
+</script>

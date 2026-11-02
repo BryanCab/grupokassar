@@ -1,0 +1,41 @@
+---
+import { enlace } from '../../data/sitio';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import Plagas from '../../components/secciones/Plagas.astro';
+import LlamadoFinal from '../../components/ui/LlamadoFinal.astro';
+import { tecnicas } from '../../data/plagas';
+import logo from '../../assets/marca/logo-kassar-control-total.png';
+---
+
+<Base titulo="Control de plagas urbanas" descripcion="Kassar Control Total: exterminio y control de cucarachas, roedores, termitas, chinches, alacranes y fauna nociva en Guadalajara, Ensenada y todo México.">
+  <Cabecera kicker="Kassar Control Total" titulo="Exterminio y control de plagas urbanas" texto="Buscamos el origen del problema y aplicamos el procedimiento adecuado, cuidando la salud de quienes usan tus instalaciones.">
+    <a href={enlace('/contacto/')} class="btn btn-oro mt-8">Solicitar cotización</a>
+  </Cabecera>
+
+  <Plagas />
+
+  <section class="seccion bg-hueso">
+    <div class="contenedor grid gap-12 lg:grid-cols-[1fr_2fr]">
+      <div data-aparece>
+        <div class="w-52 rounded-sm bg-white p-4"><Image src={logo} alt="Logotipo de Kassar Control Total" width="320" /></div>
+        <p class="kicker mt-8 text-oro-oscuro">Equipo y técnicas</p>
+        <h2 class="mt-3 text-4xl">La herramienta correcta para cada caso.</h2>
+        <p class="mt-4 text-tinta/70">Trabajamos con marcas reconocidas como Bayer, Syngenta y BASF. Todos nuestros productos cuentan con registro Cofepris de uso urbano, fichas técnicas y fichas de seguridad.</p>
+      </div>
+      <ul class="grid gap-px bg-tinta/10 sm:grid-cols-2">
+        {
+          tecnicas.map((t) => (
+            <li class="bg-hueso p-6" data-aparece>
+              <h3 class="text-xl">{t.titulo}</h3>
+              <p class="mt-2 text-sm text-tinta/70">{t.texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <LlamadoFinal />
+</Base>

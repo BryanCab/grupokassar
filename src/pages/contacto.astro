@@ -1,0 +1,32 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Cotizador from '../components/secciones/Cotizador.astro';
+import { sucursales, telHref } from '../data/sitio';
+---
+
+<Base titulo="Solicita una cotización" descripcion="Cotiza tu servicio de control de plagas, control de patógenos o sanitización con Grupo Kassar. Atención en Guadalajara, Ensenada y todo México.">
+  <section class="bg-grafito pt-32 pb-20 text-white lg:pt-40">
+    <div class="contenedor grid gap-12 lg:grid-cols-2">
+      <div>
+        <p class="kicker text-oro">Contacto</p>
+        <h1 class="mt-4 text-5xl lg:text-7xl">Cuéntanos qué está pasando.</h1>
+        <p class="mt-6 max-w-lg text-lg text-white/75">Responde tres pasos y te abrimos WhatsApp con tu solicitud lista para enviar. Si es urgente, llámanos: atendemos las 24 horas.</p>
+        <div class="mt-10 grid gap-8 sm:grid-cols-2">
+          {
+            sucursales.map((s) => (
+              <address class="text-sm text-niebla not-italic">
+                <h2 class="text-xl text-white">{s.nombre}</h2>
+                <p class="mt-2">{s.calle}, {s.colonia}, C.P. {s.cp}, {s.estado}</p>
+                <a class="mt-2 flex min-h-10 items-center gap-2 text-white hover:text-oro" href={telHref(s.telefonos[0])}><Icon name="ph:phone" class="size-4" />{s.telefonos[0]}</a>
+                <a class="flex min-h-10 items-center gap-2 break-all text-white hover:text-oro" href={`mailto:${s.correo}`}><Icon name="ph:envelope-simple" class="size-4 shrink-0" />{s.correo}</a>
+                <a class="btn btn-wa mt-3 w-full" href={`https://wa.me/${s.whatsapp}?text=${encodeURIComponent('Hola, me gustaría solicitar una cotización.')}`} target="_blank" rel="noopener noreferrer"><Icon name="simple-icons:whatsapp" class="size-5" /> WhatsApp {s.nombre}</a>
+              </address>
+            ))
+          }
+        </div>
+      </div>
+      <Cotizador />
+    </div>
+  </section>
+</Base>

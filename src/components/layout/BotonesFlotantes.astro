@@ -1,0 +1,22 @@
+---
+import { Icon } from 'astro-icon/components';
+import { sucursales, telHref } from '../../data/sitio';
+
+const principal = sucursales[0];
+const mensaje = encodeURIComponent('Hola, me gustaría solicitar una cotización.');
+---
+
+<div class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-linea bg-tinta text-white lg:right-6 lg:bottom-6 lg:left-auto lg:flex lg:flex-col lg:gap-2 lg:border-0 lg:bg-transparent">
+  <a href={telHref(principal.telefonos[0])} class="flex min-h-14 items-center justify-center gap-2 text-sm font-semibold lg:hidden">
+    <Icon name="ph:phone" class="size-5 text-oro" /> Llamar 24/7
+  </a>
+  <a
+    href={`https://wa.me/${principal.whatsapp}?text=${mensaje}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="btn-wa flex min-h-14 items-center justify-center gap-2 font-display text-sm font-bold transition-colors lg:min-h-14 lg:rounded-full lg:px-6"
+    aria-label="Escríbenos por WhatsApp"
+  >
+    <Icon name="simple-icons:whatsapp" class="size-6" /><span>WhatsApp</span>
+  </a>
+</div>

@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import LlamadoFinal from '../../components/ui/LlamadoFinal.astro';
+import { categorias, plagas, type Plaga } from '../../data/plagas';
+import { fotoDe } from '../../data/fotos';
+import { sitio, enlace } from '../../data/sitio';
+
+export function getStaticPaths() {
+  return plagas.map((plaga) => ({ params: { plaga: plaga.slug }, props: { plaga } }));
+}
+
+const { plaga } = Astro.props as { plaga: Plaga };
+const foto = fotoDe(plaga.foto);
+const nombre = plaga.nombre.toLowerCase();
+const relacionadas = plagas.filter((p) => p.categoria === plaga.categoria && p.slug !== plaga.slug).slice(0, 3);
+const bloques = [
+  { titulo: 'Señales de alerta', lista: plaga.senales, icono: 'ph:magnifying-glass' },
+  { titulo: 'Por qué atenderlo', lista: plaga.riesgos, icono: 'ph:warning-octagon' },
+  { titulo: 'Cómo lo controlamos', lista: plaga.metodos, icono: 'ph:shield-check' },
+];
+const esquema = {
+  '@type': 'Service',
+  name: `Control de ${nombre}`,
+  serviceType: 'Control de plagas',
+  description: plaga.resumen,
+  provider: { '@type': 'Organization', name: sitio.nombre, url: sitio.url },
+  areaServed: 'MX',
+};
+---
+
+<Base titulo={`Control de ${nombre} en Guadalajara y Ensenada`} descripcion={`${plaga.resumen} Servicio profesional de Kassar Control Total con técnicos certificados y atención 24/7.`} esquema={esquema}>
+  <Cabecera kicker={categorias[plaga.categoria]} titulo={`Control de ${nombre}`} texto={plaga.resumen}>
+    <a href={enlace(`/contacto/?servicio=${encodeURIComponent(plaga.nombre)}`)} class="btn btn-oro mt-8">Cotizar este servicio</a>
+  </Cabecera>
+
+  <section class="seccion bg-papel">
+    <div class="contenedor grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div data-aparece>
+        <h2 class="text-3xl lg:text-4xl">Lo que debes saber</h2>
+        <p class="mt-4 text-lg text-tinta/75">{plaga.descripcion}</p>
+        {
+          plaga.especies && (
+            <ul class="mt-6 flex flex-wrap gap-2">
+              {plaga.especies.map((e) => <li class="border border-tinta/20 px-3 py-1 text-sm">{e}</li>)}
+            </ul>
+          )
+        }
+      </div>
+      {
+        foto ? (
+          <Image src={foto} alt={plaga.fotoAlt ?? ''} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 50vw, 100vw" class="aspect-[4/3] w-full rounded-sm object-cover" data-aparece />
+        ) : (
+          <div class="flex aspect-[4/3] items-center justify-center rounded-sm bg-tinta" data-aparece>
+            <Icon name={plaga.icono} class="size-32 text-oro" />
+          </div>
+        )
+      }
+    </div>
+
+    <div class="contenedor mt-16 grid gap-px bg-tinta/10 lg:grid-cols-3">
+      {
+        bloques.map((b) => (
+          <div class="bg-papel p-6 lg:p-8" data-aparece>
+            <Icon name={b.icono} class="size-8 text-oro-oscuro" />
+            <h2 class="mt-4 text-2xl">{b.titulo}</h2>
+            <ul class="mt-4 space-y-2 text-sm text-tinta/75">
+              {b.lista.map((i) => <li class="flex gap-2"><Icon name="ph:check-circle" class="mt-0.5 size-4 shrink-0 text-oro-oscuro" />{i}</li>)}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    {
+      relacionadas.length > 0 && (
+        <div class="contenedor mt-16">
+          <h2 class="text-2xl">También atendemos</h2>
+          <ul class="mt-4 flex flex-wrap gap-3">
+            {relacionadas.map((r) => <li><a class="inline-flex min-h-11 items-center gap-2 border border-tinta/20 px-4 hover:border-tinta" href={enlace(`/control-de-plagas/${r.slug}/`)}>{r.nombre} <Icon name="ph:arrow-right" class="size-4" /></a></li>)}
+          </ul>
+        </div>
+      )
+    }
+  </section>
+
+  <LlamadoFinal titulo={`¿Sospechas que tienes ${nombre}? Hablemos.`} />
+</Base>

@@ -1,0 +1,124 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/inter';
+
+@theme {
+  --color-tinta: #0b0e13;
+  --color-grafito: #141922;
+  --color-pizarra: #1e2530;
+  --color-linea: #2c3543;
+  --color-niebla: #9aa5b4;
+  --color-hueso: #f4f2ec;
+  --color-papel: #fbfaf7;
+  --color-oro: #f5b81f;
+  --color-oro-oscuro: #8a6100;
+  --color-cafe: #5c4b41;
+  --color-azul: #0f5583;
+  --color-azul-claro: #7cc4ee;
+
+  --font-display: 'Archivo Variable', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    @apply bg-tinta scroll-pt-24;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-papel text-tinta font-sans antialiased;
+    overflow-x: clip;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-bold;
+    font-stretch: 112%;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-oro;
+  }
+  ::selection {
+    @apply bg-oro text-tinta;
+  }
+}
+
+@layer components {
+  .contenedor {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10;
+  }
+  .seccion {
+    @apply py-20 lg:py-32;
+  }
+  /* Secciones bajo el pliegue: el navegador las calcula al acercarse a la pantalla */
+  .diferida {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
+  .kicker {
+    @apply font-display text-xs font-semibold tracking-[0.2em] uppercase;
+  }
+  .titulo {
+    @apply text-4xl sm:text-5xl lg:text-6xl;
+  }
+  .btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm px-6 py-3 font-display text-sm font-semibold transition-colors duration-200;
+  }
+  .btn-oro {
+    @apply bg-oro text-tinta hover:bg-white;
+  }
+  .btn-linea {
+    @apply border border-white/30 text-white hover:border-oro hover:text-oro;
+  }
+  /* Verde oficial de WhatsApp (#25D366); texto oscuro para mantener el contraste */
+  .btn-wa {
+    @apply bg-[#25d366] text-tinta shadow-lg shadow-[#25d366]/25 hover:bg-[#1ebe5a];
+  }
+  .btn-tinta {
+    @apply bg-tinta text-white hover:bg-cafe;
+  }
+  .campo {
+    @apply min-h-12 w-full rounded-sm border border-linea bg-grafito px-4 py-3 text-base text-white placeholder:text-niebla focus:border-oro focus:outline-none;
+  }
+  .opcion {
+    @apply flex min-h-12 cursor-pointer items-center gap-2 rounded-sm border border-linea bg-grafito px-4 py-3 text-sm text-white transition-colors hover:border-oro;
+  }
+  .opcion:has(input:checked) {
+    @apply border-oro bg-oro text-tinta;
+  }
+  .opcion:has(input:focus-visible) {
+    @apply outline-2 outline-offset-2 outline-oro;
+  }
+  .foto-plaga {
+    filter: grayscale(1) contrast(1.05) brightness(0.8);
+    transition:
+      filter 0.5s ease,
+      transform 0.7s ease;
+  }
+  .tarjeta-plaga:hover .foto-plaga,
+  .tarjeta-plaga:focus-visible .foto-plaga {
+    filter: none;
+    transform: scale(1.04);
+  }
+}
+
+/* Animaciones de entrada: solo se ocultan si el script de movimiento está activo */
+.js-movimiento [data-aparece] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

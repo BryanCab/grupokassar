@@ -1,0 +1,18 @@
+---
+interface Props {
+  kicker: string;
+  titulo: string;
+  texto?: string;
+  color?: 'oro' | 'azul';
+}
+const { kicker, titulo, texto, color = 'oro' } = Astro.props;
+---
+
+<section class:list={['relative overflow-hidden pt-36 pb-16 text-white lg:pt-44 lg:pb-24', color === 'azul' ? 'bg-azul' : 'bg-tinta']}>
+  <div class="contenedor">
+    <p class:list={['kicker', color === 'azul' ? 'text-azul-claro' : 'text-oro']}>{kicker}</p>
+    <h1 class="mt-4 max-w-4xl text-5xl sm:text-6xl lg:text-7xl">{titulo}</h1>
+    {texto && <p class="mt-6 max-w-2xl text-lg text-white/80">{texto}</p>}
+    <slot />
+  </div>
+</section>

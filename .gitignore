@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+.env
+*.log
+
+# Material interno del cliente (no se publica)
+docs/cliente/
+docs/pendientes.md

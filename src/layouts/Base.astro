@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+import Encabezado from '../components/layout/Encabezado.astro';
+import Pie from '../components/layout/Pie.astro';
+import BotonesFlotantes from '../components/layout/BotonesFlotantes.astro';
+import { sitio, sucursales, enlace } from '../data/sitio';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+  esquema?: object;
+}
+
+const { titulo, descripcion = sitio.descripcion, esquema } = Astro.props;
+const canonica = new URL(Astro.url.pathname, Astro.site).href;
+const tituloCompleto = titulo.includes(sitio.nombre) ? titulo : `${titulo} | ${sitio.nombre}`;
+const imagen = new URL(enlace('/og-grupo-kassar.jpg'), Astro.site).href;
+
+const negocios = sucursales.map((s) => ({
+  '@type': 'LocalBusiness',
+  '@id': `${sitio.url}/#${s.id}`,
+  name: `${sitio.nombre} ${s.nombre}`,
+  url: sitio.url,
+  image: imagen,
+  email: s.correo,
+  telephone: `+52 ${s.telefonos[0]}`,
+  areaServed: 'MX',
+  openingHours: 'Mo-Su 00:00-23:59',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${s.calle}, ${s.colonia}`,
+    addressLocality: s.ciudad,
+    addressRegion: s.codigoEstado,
+    postalCode: s.cp,
+    addressCountry: 'MX',
+  },
+}));
+const grafo = {
+  '@context': 'https://schema.org',
+  '@graph': [{ '@type': 'Organization', name: sitio.nombre, url: sitio.url, logo: `${sitio.url}/favicon.svg` }, ...negocios, ...(esquema ? [esquema] : [])],
+};
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonica} />
+    <link rel="icon" href={enlace('/favicon.svg')} type="image/svg+xml" />
+    <link rel="sitemap" href={enlace('/sitemap-index.xml')} />
+    <meta name="theme-color" content="#0b0e13" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:site_name" content={sitio.nombre} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    <meta property="og:image" content={imagen} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(grafo)} />
+  </head>
+  <body>
+    <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-oro focus:p-3 focus:text-tinta">Saltar al contenido</a>
+    <Encabezado />
+    <main id="contenido"><slot /></main>
+    <Pie />
+    <BotonesFlotantes />
+    <script src="../scripts/movimiento.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+---
+import { enlace } from '../../data/sitio';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { categorias, plagas } from '../../data/plagas';
+import { fotoDe } from '../../data/fotos';
+---
+
+<section class="seccion diferida bg-papel">
+  <div class="contenedor">
+    <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end" data-aparece>
+      <div>
+        <p class="kicker text-oro-oscuro">Identifica tu plaga</p>
+        <h2 class="titulo mt-3 max-w-2xl">¿Qué estás viendo en tu espacio?</h2>
+      </div>
+      <div class="flex flex-wrap gap-2" role="group" aria-label="Filtrar por tipo de plaga">
+        <button type="button" data-filtro="todas" aria-pressed="true" class="filtro">Todas</button>
+        {Object.entries(categorias).map(([id, nombre]) => <button type="button" data-filtro={id} aria-pressed="false" class="filtro">{nombre}</button>)}
+      </div>
+    </div>
+
+    <ul class="mt-12 grid grid-cols-2 gap-px bg-tinta/10 md:grid-cols-3 lg:grid-cols-4">
+      {
+        plagas.map((p) => {
+          const foto = fotoDe(p.foto);
+          return (
+            <li data-categoria={p.categoria} data-aparece>
+              <a href={enlace(`/control-de-plagas/${p.slug}/`)} class="tarjeta-plaga group relative block aspect-square overflow-hidden bg-tinta text-white">
+                {foto ? (
+                  <Image src={foto} alt={p.fotoAlt ?? ''} widths={[320, 480, 640]} sizes="(min-width: 1024px) 25vw, 50vw" class="foto-plaga absolute inset-0 size-full object-cover" />
+                ) : (
+                  <Icon name={p.icono} class="absolute top-1/2 left-1/2 size-24 -translate-x-1/2 -translate-y-1/2 text-linea transition-colors group-hover:text-oro" />
+                )}
+                <span class="absolute inset-0 bg-linear-to-t from-tinta via-tinta/20 to-transparent" />
+                <span class="absolute inset-x-0 bottom-0 p-4 lg:p-5">
+                  <span class="block font-display text-lg leading-tight font-bold lg:text-xl">{p.nombre}</span>
+                  <span class="mt-1 hidden text-sm text-white/70 sm:block">{p.resumen}</span>
+                </span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .filtro {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid color-mix(in srgb, var(--color-tinta) 25%, transparent);
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .filtro[aria-pressed='true'] {
+    background: var(--color-tinta);
+    color: #fff;
+    border-color: var(--color-tinta);
+  }
+</style>
+
+<script>
+  const botones = document.querySelectorAll<HTMLButtonElement>('[data-filtro]');
+  const tarjetas = document.querySelectorAll<HTMLElement>('[data-categoria]');
+  botones.forEach((b) =>
+    b.addEventListener('click', () => {
+      const filtro = b.dataset.filtro;
+      botones.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+      tarjetas.forEach((t) => {
+        t.hidden = filtro !== 'todas' && t.dataset.categoria !== filtro;
+        t.style.opacity = '1';
+        t.style.transform = 'none';
+      });
+    }),
+  );
+</script>

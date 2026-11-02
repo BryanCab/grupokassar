@@ -1,0 +1,11 @@
+---
+import { enlace } from '../data/sitio';
+import Base from '../layouts/Base.astro';
+import Cabecera from '../components/ui/Cabecera.astro';
+---
+
+<Base titulo="Página no encontrada">
+  <Cabecera kicker="Error 404" titulo="Esta página no existe" texto="Es posible que el enlace haya cambiado.">
+    <a href={enlace('/')} class="btn btn-oro mt-8">Volver al inicio</a>
+  </Cabecera>
+</Base>

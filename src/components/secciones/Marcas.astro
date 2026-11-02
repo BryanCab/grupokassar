@@ -1,0 +1,25 @@
+---
+import { enlace } from '../../data/sitio';
+import { Icon } from 'astro-icon/components';
+---
+
+<section class="grid bg-tinta text-white lg:grid-cols-2">
+  <a href={enlace('/control-de-plagas/')} class="group relative flex min-h-[28rem] flex-col justify-end overflow-hidden bg-cafe p-6 sm:p-10 lg:min-h-[36rem] lg:p-14">
+    <Icon name="ph:house-line" class="absolute -top-6 -right-6 size-72 text-white/5 transition-transform duration-700 group-hover:scale-110" data-parallax="-8" />
+    <div data-aparece>
+      <p class="kicker text-oro">Kassar Control Total</p>
+      <h2 class="mt-3 text-4xl lg:text-5xl">Exterminio y control de plagas urbanas</h2>
+      <p class="mt-4 max-w-md text-white/80">Insectos rastreros, roedores, termitas, chinches y manejo responsable de fauna nociva.</p>
+      <span class="mt-6 inline-flex items-center gap-2 font-display font-semibold text-oro">Conocer servicios <Icon name="ph:arrow-right" class="size-5 transition-transform group-hover:translate-x-1" /></span>
+    </div>
+  </a>
+  <a href={enlace('/control-de-patogenos/')} class="group relative flex min-h-[28rem] flex-col justify-end overflow-hidden bg-azul p-6 sm:p-10 lg:min-h-[36rem] lg:p-14">
+    <Icon name="ph:drop" class="absolute -top-6 -right-6 size-72 text-white/5 transition-transform duration-700 group-hover:scale-110" data-parallax="-8" />
+    <div data-aparece>
+      <p class="kicker text-azul-claro">Kassar Good Washed</p>
+      <h2 class="mt-3 text-4xl lg:text-5xl">Control de patógenos y sanitización</h2>
+      <p class="mt-4 max-w-md text-white/80">Entornos más limpios y seguros, con lavado y desinfección de textiles.</p>
+      <span class="mt-6 inline-flex items-center gap-2 font-display font-semibold text-azul-claro">Conocer servicios <Icon name="ph:arrow-right" class="size-5 transition-transform group-hover:translate-x-1" /></span>
+    </div>
+  </a>
+</section>

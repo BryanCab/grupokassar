@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabecera from '../components/ui/Cabecera.astro';
+import Respaldo from '../components/secciones/Respaldo.astro';
+import LlamadoFinal from '../components/ui/LlamadoFinal.astro';
+
+const pilares = [
+  { titulo: 'Misión', texto: 'Proveer un ambiente saludable y seguro mediante una variedad de productos y servicios que suministran soluciones inteligentes para crear, conservar y preservar entornos limpios.' },
+  { titulo: 'Visión', texto: 'Ofrecer opciones sostenibles y sustentables para mejorar la salud y la vida diaria de las personas, y ser siempre relevantes en sus vidas.' },
+  { titulo: 'Objetivo central', texto: 'Lograr que la marca Kassar sea la opción preferida de todos los sectores económicos, resolviendo las necesidades de nuestros clientes en control de plagas, control de patógenos y sanitización.' },
+];
+---
+
+<Base titulo="Nosotros" descripcion="Grupo Kassar es un conjunto de empresas enfocadas al cuidado de la salud y del medio ambiente mediante control de plagas, control de patógenos y sanitización.">
+  <Cabecera kicker="Nosotros" titulo="Cuidamos la salud y el medio ambiente" texto="Grupo Kassar es un conjunto de empresas dedicadas al control de plagas, el control de patógenos y la sanitización." />
+  <section class="seccion bg-papel">
+    <div class="contenedor grid gap-px bg-tinta/10 lg:grid-cols-3">
+      {
+        pilares.map((p) => (
+          <article class="bg-papel p-6 lg:p-10" data-aparece>
+            <h2 class="text-3xl">{p.titulo}</h2>
+            <p class="mt-4 text-tinta/75">{p.texto}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+  <Respaldo />
+  <LlamadoFinal />
+</Base>

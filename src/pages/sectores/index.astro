@@ -1,0 +1,28 @@
+---
+import { enlace } from '../../data/sitio';
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import LlamadoFinal from '../../components/ui/LlamadoFinal.astro';
+import { sectores } from '../../data/sectores';
+---
+
+<Base titulo="Sectores que atendemos" descripcion="Control de plagas para los sectores industrial, alimenticio, salud, comercial, corporativo y residencial.">
+  <Cabecera kicker="Sectores" titulo="Un programa para cada tipo de espacio" texto="De una nave industrial a tu casa: adaptamos el servicio a la operación y a las personas que usan cada lugar." />
+  <section class="seccion bg-papel">
+    <ul class="contenedor grid gap-px bg-tinta/10 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        sectores.map((s) => (
+          <li class="bg-papel" data-aparece>
+            <a href={enlace(`/sectores/${s.slug}/`)} class="block h-full p-8 transition-colors hover:bg-hueso">
+              <Icon name={s.icono} class="size-9 text-oro-oscuro" />
+              <h2 class="mt-5 text-2xl">{s.nombre}</h2>
+              <p class="mt-2 text-sm text-tinta/70">{s.resumen}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <LlamadoFinal />
+</Base>

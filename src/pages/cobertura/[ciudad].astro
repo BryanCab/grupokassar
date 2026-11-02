@@ -1,0 +1,42 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../../layouts/Base.astro';
+import Cabecera from '../../components/ui/Cabecera.astro';
+import LlamadoFinal from '../../components/ui/LlamadoFinal.astro';
+import { sucursales, sitio, telHref, enlace } from '../../data/sitio';
+import { plagas } from '../../data/plagas';
+
+export function getStaticPaths() {
+  return sucursales.map((sucursal) => ({ params: { ciudad: sucursal.id }, props: { sucursal } }));
+}
+
+const { sucursal } = Astro.props as { sucursal: (typeof sucursales)[number] };
+const consulta = encodeURIComponent(`${sucursal.calle}, ${sucursal.colonia}, ${sucursal.ciudad}, ${sucursal.estado}`);
+---
+
+<Base titulo={`Control de plagas en ${sucursal.ciudad}, ${sucursal.estado}`} descripcion={`Fumigación y control de plagas en ${sucursal.ciudad}. Sucursal de Grupo Kassar con atención 24/7 para empresas y hogares.`}>
+  <Cabecera kicker={sucursal.etiqueta} titulo={`Control de plagas en ${sucursal.ciudad}`} texto={`Atendemos empresas y hogares de ${sucursal.ciudad} y sus alrededores, las 24 horas de los 365 días del año.`}>
+    <a href={telHref(sucursal.telefonos[0])} class="btn btn-oro mt-8">Llamar: {sucursal.telefonos[0]}</a>
+  </Cabecera>
+  <section class="seccion bg-papel">
+    <div class="contenedor grid gap-12 lg:grid-cols-2">
+      <div data-aparece>
+        <h2 class="text-3xl">Datos de la sucursal</h2>
+        <address class="mt-5 space-y-3 not-italic">
+          <p class="flex gap-3"><Icon name="ph:map-pin" class="size-5 shrink-0 text-oro-oscuro" />{sucursal.calle}, {sucursal.colonia}, C.P. {sucursal.cp}, {sucursal.ciudad}, {sucursal.estado}</p>
+          {sucursal.telefonos.map((t) => <p class="flex gap-3"><Icon name="ph:phone" class="size-5 shrink-0 text-oro-oscuro" /><a class="underline" href={telHref(t)}>{t}</a></p>)}
+          <p class="flex gap-3"><Icon name="ph:envelope-simple" class="size-5 shrink-0 text-oro-oscuro" /><a class="underline" href={`mailto:${sucursal.correo}`}>{sucursal.correo}</a></p>
+          <p class="text-sm text-tinta/70">Registro Cofepris: {sitio.cofepris}</p>
+        </address>
+        <a class="btn btn-tinta mt-6" target="_blank" rel="noopener noreferrer" href={`https://www.google.com/maps/search/?api=1&query=${consulta}`}>Ver en Google Maps</a>
+      </div>
+      <div data-aparece>
+        <h2 class="text-3xl">Servicios en {sucursal.ciudad}</h2>
+        <ul class="mt-5 grid grid-cols-2 gap-x-6 gap-y-2">
+          {plagas.map((p) => <li><a class="flex min-h-10 items-center hover:text-oro-oscuro" href={enlace(`/control-de-plagas/${p.slug}/`)}>{p.nombre}</a></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+  <LlamadoFinal />
+</Base>

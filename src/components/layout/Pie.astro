@@ -1,0 +1,55 @@
+---
+import { navegacion, sitio, sucursales, telHref, enlace } from '../../data/sitio';
+import { sectores } from '../../data/sectores';
+import aguila from '../../assets/marca/aguila-grupo-kassar.svg?url';
+---
+
+<footer class="bg-tinta text-white">
+  <div class="contenedor grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <a href={enlace('/')} class="flex items-center gap-3">
+        <img src={aguila} alt="" width="44" height="36" class="h-9 w-auto" loading="lazy" />
+        <span class="font-display text-lg font-bold">Grupo Kassar</span>
+      </a>
+      <p class="mt-4 max-w-xs text-sm text-niebla">Cuidado de la salud y del medio ambiente mediante control de plagas, control de patógenos y sanitización.</p>
+      <p class="mt-4 text-sm text-niebla">Registro Cofepris: <span class="text-white">{sitio.cofepris}</span></p>
+    </div>
+
+    <nav aria-label="Pie de página">
+      <p class="kicker text-oro">Sitio</p>
+      <ul class="mt-4 space-y-2 text-sm">
+        {navegacion.map((n) => <li><a class="text-niebla hover:text-white" href={n.href}>{n.nombre}</a></li>)}
+        <li><a class="text-niebla hover:text-white" href={enlace('/aviso-de-privacidad/')}>Aviso de privacidad</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <p class="kicker text-oro">Sectores</p>
+      <ul class="mt-4 space-y-2 text-sm">
+        {sectores.map((s) => <li><a class="text-niebla hover:text-white" href={enlace(`/sectores/${s.slug}/`)}>{s.nombre}</a></li>)}
+      </ul>
+    </div>
+
+    <div>
+      <p class="kicker text-oro">Sucursales</p>
+      <div class="mt-4 space-y-5 text-sm">
+        {
+          sucursales.map((s) => (
+            <address class="text-niebla not-italic">
+              <a href={enlace(`/cobertura/${s.id}/`)} class="font-semibold text-white hover:text-oro">{s.nombre}</a>
+              <br />
+              {s.calle}, {s.colonia}
+              <br />
+              C.P. {s.cp}, {s.estado}
+              <br />
+              <a class="hover:text-white" href={telHref(s.telefonos[0])}>{s.telefonos[0]}</a>
+            </address>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-linea">
+    <div class="contenedor py-5 pb-24 text-xs text-niebla lg:pb-5">© {new Date().getFullYear()} Grupo Kassar. Todos los derechos reservados.</div>
+  </div>
+</footer>
