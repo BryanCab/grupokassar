@@ -5,9 +5,7 @@ import reporte from '../assets/pestos/tel-reporte.webp';
 import constancia from '../assets/pestos/tel-constancia.webp';
 import monitoreo from '../assets/pestos/tel-monitoreo.webp';
 import mapa from '../assets/pestos/tel-mapa.webp';
-import docReporte from '../assets/pestos/doc-reporte.webp';
-import docConstancia from '../assets/pestos/doc-constancia.webp';
-import docCalendario from '../assets/pestos/doc-calendario.webp';
+import type { ImageMetadata } from 'astro';
 
 /** Sitio de la plataforma que usa Grupo Kassar para documentar sus servicios */
 export const pestos = {
@@ -101,30 +99,6 @@ export const entregables = [
   { icono: 'ph:bell-ringing', titulo: 'Seguimiento', texto: 'Solicita una cita, consulta el estado de tu solicitud y recibe avisos.' },
 ];
 
-export const documentos = [
-  {
-    id: 'reporte',
-    nombre: 'Reporte de servicio',
-    texto: 'Lo que se encontró, lo que se aplicó y con qué producto.',
-    imagen: docReporte,
-    alt: 'Reporte de servicio en PDF con datos ficticios',
-  },
-  {
-    id: 'constancia',
-    nombre: 'Constancia de servicio',
-    texto: 'El comprobante formal de cada visita, con folio.',
-    imagen: docConstancia,
-    alt: 'Constancia de servicio en PDF con datos ficticios',
-  },
-  {
-    id: 'calendario',
-    nombre: 'Calendario de servicios',
-    texto: 'Las visitas del año, con el día de cada mes.',
-    imagen: docCalendario,
-    alt: 'Calendario anual de servicios en PDF con datos ficticios',
-  },
-];
-
 export const flujo = [
   { icono: 'ph:calendar-check', titulo: 'Se agenda', texto: 'La visita queda programada con fecha, hora y técnico. Tú también puedes solicitar una cita desde tu portal.' },
   { icono: 'ph:bug-beetle', titulo: 'Se inspecciona y se trata', texto: 'El técnico documenta hallazgos y fotos desde su celular, incluso sin señal. Todo se sincroniza después.' },
@@ -159,3 +133,31 @@ export const preguntas = [
     r: 'Son capturas reales de la plataforma, pero con datos ficticios. No mostramos información de ningún cliente.',
   },
 ];
+
+const paginas = import.meta.glob<{ default: ImageMetadata }>('/src/assets/pestos/doc-*.webp', { eager: true });
+const pagina = (doc: string, n: number) => paginas[`/src/assets/pestos/doc-${doc}-${n}.webp`].default;
+
+/** Documentos que se muestran en el abanico. `muestra` son las páginas que se ven sobre la mesa. */
+export const abanicos = [
+  {
+    id: 'reporte',
+    pestana: 'Reporte ejecutivo',
+    paginasTotal: 10,
+    titulo: 'Reporte ejecutivo de servicio',
+    texto: 'Hallazgos, trabajo realizado, productos con lote, plano de instalación, tendencias por dispositivo y recomendaciones.',
+    muestra: [1, 3, 5, 6, 8, 9],
+    pdf: '/documentos/reporte-ejecutivo-grupo-kassar.pdf',
+  },
+  {
+    id: 'constancia',
+    pestana: 'Constancia de servicio',
+    paginasTotal: 4,
+    titulo: 'Constancia de servicio',
+    texto: 'El comprobante formal de cada visita: folio, plagas identificadas, control empleado, productos y datos del técnico.',
+    muestra: [1, 2, 3, 4],
+    pdf: '/documentos/constancia-servicio-grupo-kassar.pdf',
+  },
+].map((d) => ({
+  ...d,
+  paginas: Array.from({ length: d.paginasTotal }, (_, i) => ({ n: i + 1, imagen: pagina(d.id, i + 1) })),
+}));

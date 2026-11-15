@@ -1,0 +1,325 @@
+---
+import { getImage } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { abanicos } from '../../data/pestos';
+import { enlace } from '../../data/sitio';
+
+// Hojas de la mesa (ligeras) y páginas del visor (más grandes). Se generan al compilar.
+const docs = await Promise.all(
+  abanicos.map(async (d) => ({
+    ...d,
+    pdfUrl: enlace(d.pdf),
+    hojas: await Promise.all(
+      d.muestra.map(async (n) => ({
+        n,
+        img: await getImage({ src: d.paginas[n - 1].imagen, width: 720, format: 'webp' }),
+      })),
+    ),
+    visor: await Promise.all(d.paginas.map(async (p) => ({ n: p.n, img: await getImage({ src: p.imagen, width: 1100, format: 'webp' }) }))),
+  })),
+);
+---
+
+<div data-abanico data-doc="reporte">
+  <div role="tablist" aria-label="Tipo de documento" class="flex flex-wrap justify-center gap-2 sm:gap-3">
+    {
+      docs.map((d, i) => (
+        <button type="button" role="tab" data-pestana={d.id} aria-selected={i === 0 ? 'true' : 'false'} class="pestana-doc">
+          {d.pestana}
+          <span class="text-xs opacity-70">· {d.paginasTotal} págs.</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="mesa relative mt-10 lg:mt-14" data-mesa>
+    {
+      docs.map((d, i) => (
+        <div data-escena={d.id} hidden={i !== 0 || undefined} class="escena">
+          {d.hojas.map((h) => (
+            <button type="button" class="hoja" data-pagina={h.n} aria-label={`Abrir la página ${h.n} de ${d.titulo}`}>
+              <img src={h.img.src} width={h.img.attributes.width} height={h.img.attributes.height} alt={`Página ${h.n} de ${d.titulo}`} loading={h.n > 3 ? 'lazy' : 'eager'} decoding="async" draggable="false" />
+            </button>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="mx-auto mt-2 max-w-2xl text-center">
+    {
+      docs.map((d, i) => (
+        <div data-texto={d.id} hidden={i !== 0 || undefined}>
+          <h3 class="text-2xl text-white sm:text-3xl">{d.titulo}</h3>
+          <p class="mt-3 text-white/70">{d.texto}</p>
+        </div>
+      ))
+    }
+    <div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+      <button type="button" data-abrir class="btn btn-oro"><Icon name="ph:arrows-out-simple" class="size-5" />Ver el documento completo</button>
+      {
+        docs.map((d, i) => (
+          <a href={d.pdfUrl} download data-pdf={d.id} hidden={i !== 0 || undefined} class="btn btn-linea"><Icon name="ph:download-simple" class="size-5" />Descargar PDF</a>
+        ))
+      }
+    </div>
+  </div>
+
+  <dialog data-visor class="visor" aria-label="Documento completo">
+    <div class="visor-barra">
+      <strong data-visor-titulo class="mr-auto font-display text-lg text-white"></strong>
+      <span data-visor-pag class="text-sm text-niebla tabular-nums"></span>
+      {
+        docs.map((d, i) => (
+          <a href={d.pdfUrl} download data-visor-pdf={d.id} hidden={i !== 0 || undefined} class="btn btn-linea !min-h-11 !px-4">Descargar PDF</a>
+        ))
+      }
+      <button type="button" data-cerrar class="grid size-11 place-items-center rounded-full border border-white/30 text-white hover:border-oro hover:text-oro" aria-label="Cerrar"><Icon name="ph:x" class="size-5" /></button>
+    </div>
+    <div data-visor-cuerpo data-lenis-prevent class="visor-cuerpo">
+      {
+        docs.map((d, i) => (
+          <div data-visor-doc={d.id} hidden={i !== 0 || undefined} class="visor-paginas">
+            {d.visor.map((p) => (
+              <img src={p.img.src} width={p.img.attributes.width} height={p.img.attributes.height} alt={`Página ${p.n} de ${d.paginasTotal}`} data-p={p.n} loading="lazy" decoding="async" />
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </dialog>
+</div>
+
+<style>
+  .pestana-doc {
+    min-height: 3rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--color-linea);
+    background: rgb(255 255 255 / 0.03);
+    color: rgb(255 255 255 / 0.7);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition:
+      color 0.25s,
+      background 0.25s,
+      border-color 0.25s,
+      transform 0.25s;
+  }
+  .pestana-doc:hover {
+    color: #fff;
+    border-color: rgb(245 184 31 / 0.6);
+    transform: translateY(-2px);
+  }
+  .pestana-doc[aria-selected='true'] {
+    color: var(--color-tinta);
+    background: var(--color-oro);
+    border-color: var(--color-oro);
+  }
+
+  .mesa {
+    position: relative;
+    height: clamp(430px, 66vw, 720px);
+    perspective: 1800px;
+    margin-bottom: 2rem;
+  }
+  .escena {
+    position: absolute;
+    inset: 0;
+  }
+  .escena[hidden] {
+    display: none;
+  }
+  .hoja {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: clamp(210px, 38vw, 460px);
+    aspect-ratio: 210 / 297;
+    margin-left: calc(clamp(210px, 38vw, 460px) / -2);
+    overflow: hidden;
+    border-radius: 8px;
+    background: #fff;
+    cursor: zoom-in;
+    will-change: transform;
+    box-shadow:
+      0 30px 80px -20px rgb(0 0 0 / 0.85),
+      0 0 0 1px rgb(255 255 255 / 0.1);
+    transition: box-shadow 0.3s;
+  }
+  .hoja:hover,
+  .hoja:focus-visible {
+    box-shadow:
+      0 40px 100px -20px rgb(0 0 0 / 0.9),
+      0 0 0 2px var(--color-oro),
+      0 0 50px -6px rgb(245 184 31 / 0.65);
+  }
+  .hoja img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .visor {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(5 7 10 / 0.96);
+  }
+  .visor[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .visor::backdrop {
+    background: rgb(0 0 0 / 0.8);
+  }
+  .visor-barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-linea);
+  }
+  .visor-barra [hidden] {
+    display: none;
+  }
+  .visor-cuerpo {
+    flex: 1;
+    overflow: auto;
+    padding: 1.5rem 0.9rem 4rem;
+  }
+  .visor-paginas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+  }
+  .visor-paginas[hidden] {
+    display: none;
+  }
+  .visor-paginas img {
+    width: min(920px, 100%);
+    height: auto;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 20px 60px -20px #000;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tactil = matchMedia('(hover: none)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-abanico]').forEach((raiz) => {
+    const mesa = raiz.querySelector<HTMLElement>('[data-mesa]')!;
+    const visor = raiz.querySelector<HTMLDialogElement>('[data-visor]')!;
+    let doc = raiz.dataset.doc!;
+    let hojas: HTMLElement[] = [];
+    let ancho = 300;
+    let abierto = sinMovimiento ? 1 : 0.15;
+
+    const movil = () => innerWidth < 640;
+
+    const disponer = () => {
+      const n = hojas.length;
+      const medio = (n - 1) / 2;
+      hojas.forEach((h, i) => {
+        const o = i - medio;
+        gsap.set(h, {
+          x: o * ancho * (movil() ? 0.34 : 0.5) * abierto,
+          y: Math.abs(o) * 12 * abierto,
+          z: -Math.abs(o) * 50,
+          rotateZ: o * 4.5 * abierto,
+          rotateY: -o * 7 * abierto,
+          zIndex: 20 - Math.round(Math.abs(o) * 2),
+          transformOrigin: '50% 100%',
+        });
+      });
+    };
+
+    const activar = (id: string, animar = false) => {
+      doc = id;
+      raiz.dataset.doc = id;
+      raiz.querySelectorAll<HTMLElement>('[data-escena],[data-texto],[data-pdf],[data-visor-pdf],[data-visor-doc]').forEach((el) => {
+        const suyo = el.dataset.escena ?? el.dataset.texto ?? el.dataset.pdf ?? el.dataset.visorPdf ?? el.dataset.visorDoc;
+        el.hidden = suyo !== id;
+      });
+      raiz.querySelectorAll<HTMLElement>('[data-pestana]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.pestana === id)));
+      hojas = [...raiz.querySelectorAll<HTMLElement>(`[data-escena="${id}"] .hoja`)];
+      ancho = hojas[0]?.offsetWidth || ancho;
+      if (animar && !sinMovimiento) {
+        abierto = 0.1;
+        disponer();
+        gsap.to({ s: 0.1 }, { s: 1, duration: 1.1, ease: 'power3.out', onUpdate() { abierto = (this.targets()[0] as { s: number }).s; disponer(); } });
+      } else disponer();
+    };
+
+    raiz.querySelectorAll<HTMLButtonElement>('[data-pestana]').forEach((b) => b.addEventListener('click', () => b.dataset.pestana !== doc && activar(b.dataset.pestana!, true)));
+    activar(doc);
+
+    // Las hojas se abren conforme se hace scroll
+    if (!sinMovimiento) {
+      ScrollTrigger.create({
+        trigger: mesa,
+        start: 'top 90%',
+        end: 'center 45%',
+        scrub: true,
+        onUpdate: (s) => {
+          abierto = 0.12 + s.progress * 0.88;
+          disponer();
+        },
+      });
+    }
+    addEventListener('resize', () => {
+      ancho = hojas[0]?.offsetWidth || ancho;
+      disponer();
+    });
+
+    // Elevación al pasar el cursor
+    mesa.querySelectorAll<HTMLElement>('.hoja').forEach((h) => {
+      h.addEventListener('pointerenter', () => !tactil && gsap.to(h, { y: '-=18', duration: 0.3, overwrite: 'auto' }));
+      h.addEventListener('pointerleave', () => !tactil && disponer());
+      h.addEventListener('click', () => abrir(Number(h.dataset.pagina)));
+    });
+    raiz.querySelector('[data-abrir]')!.addEventListener('click', () => abrir(1));
+
+    // Visor
+    const cuerpo = raiz.querySelector<HTMLElement>('[data-visor-cuerpo]')!;
+    const pag = raiz.querySelector<HTMLElement>('[data-visor-pag]')!;
+    let observador: IntersectionObserver | undefined;
+    function abrir(inicio: number) {
+      const paginas = [...cuerpo.querySelectorAll<HTMLImageElement>(`[data-visor-doc="${doc}"] img`)];
+      const titulo = raiz.querySelector(`[data-texto="${doc}"] h3`)?.textContent ?? '';
+      raiz.querySelector('[data-visor-titulo]')!.textContent = titulo;
+      pag.textContent = `Página ${inicio} de ${paginas.length}`;
+      visor.showModal();
+      document.documentElement.style.overflow = 'hidden';
+      observador?.disconnect();
+      observador = new IntersectionObserver(
+        (es) => es.forEach((e) => e.isIntersecting && (pag.textContent = `Página ${(e.target as HTMLElement).dataset.p} de ${paginas.length}`)),
+        { root: cuerpo, threshold: 0.5 },
+      );
+      paginas.forEach((i) => observador!.observe(i));
+      requestAnimationFrame(() => paginas[inicio - 1] && cuerpo.scrollTo({ top: paginas[inicio - 1].offsetTop - 80 }));
+    }
+    const cerrar = () => visor.close();
+    raiz.querySelector('[data-cerrar]')!.addEventListener('click', cerrar);
+    visor.addEventListener('close', () => {
+      document.documentElement.style.overflow = '';
+      observador?.disconnect();
+    });
+    visor.addEventListener('click', (e) => {
+      if (e.target === visor || e.target === cuerpo || (e.target as HTMLElement).classList.contains('visor-paginas')) cerrar();
+    });
+  });
+</script>

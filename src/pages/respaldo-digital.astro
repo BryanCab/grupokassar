@@ -1,11 +1,11 @@
 ---
-import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import Base from '../layouts/Base.astro';
 import Cabecera from '../components/ui/Cabecera.astro';
 import LlamadoFinal from '../components/ui/LlamadoFinal.astro';
 import TourDigital from '../components/ui/TourDigital.astro';
-import { documentos, entregables, flujo, preguntas, pestos } from '../data/pestos';
+import AbanicoDocs from '../components/ui/AbanicoDocs.astro';
+import { entregables, flujo, preguntas, pestos } from '../data/pestos';
 
 // Código QR ilustrativo (no es un código real): tres marcas de posición y módulos repartidos de forma estable
 const N = 25;
@@ -91,44 +91,19 @@ const esquema = {
   </section>
 
   <!-- Documentos -->
-  <section class="seccion bg-tinta text-white">
+  <section class="seccion relative isolate overflow-hidden bg-tinta text-white">
+    <div class="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_50%_75%,rgb(245_184_31/0.10),transparent_70%)]" aria-hidden="true"></div>
     <div class="contenedor">
-      <div class="max-w-3xl" data-aparece>
+      <div class="mx-auto max-w-3xl text-center" data-aparece>
         <p class="kicker text-oro">Lo que recibes</p>
         <h2 class="titulo mt-3">Documentos listos para auditoría.</h2>
-        <p class="mt-5 max-w-2xl text-lg text-white/70">Mueve el cursor sobre cada documento y haz clic para verlo completo. Son ejemplos con datos ficticios.</p>
+        <p class="mt-5 text-lg text-white/70">Así llega a tus manos cada servicio. Toca una hoja para verla completa o descarga el PDF.</p>
       </div>
-      <ul class="mt-14 grid gap-8 md:grid-cols-3 lg:gap-10">
-        {
-          documentos.map((d) => (
-            <li data-aparece>
-              <button type="button" data-doc={d.id} class="tarjeta-doc group w-full text-left" aria-label={`Ver ${d.nombre} en grande`}>
-                <span class="hoja">
-                  <Image src={d.imagen} alt={d.alt} widths={[400, 640, 900]} sizes="(min-width: 768px) 30vw, 90vw" class="w-full" loading="lazy" />
-                  <span class="reflejo" aria-hidden="true"></span>
-                </span>
-                <span class="mt-5 flex items-start justify-between gap-4">
-                  <span>
-                    <span class="block font-display text-xl font-bold">{d.nombre}</span>
-                    <span class="mt-1 block text-sm text-niebla">{d.texto}</span>
-                  </span>
-                  <span class="mt-1 grid size-9 shrink-0 place-items-center rounded-full border border-linea text-oro transition-colors group-hover:border-oro group-hover:bg-oro group-hover:text-tinta"><Icon name="ph:arrows-out-simple" class="size-4" /></span>
-                </span>
-              </button>
-            </li>
-          ))
-        }
-      </ul>
+      <div class="mt-12" data-aparece>
+        <AbanicoDocs />
+      </div>
     </div>
   </section>
-
-  <dialog id="visor" class="visor" aria-label="Vista ampliada del documento">
-    <form method="dialog" class="visor-barra">
-      <p id="visor-titulo" class="font-display font-bold text-white"></p>
-      <button class="grid size-11 place-items-center rounded-full border border-white/30 text-white hover:border-oro hover:text-oro" aria-label="Cerrar"><Icon name="ph:x" class="size-5" /></button>
-    </form>
-    <div class="visor-cuerpo"><img id="visor-img" alt="" class="mx-auto h-auto w-full max-w-4xl bg-white shadow-2xl" /></div>
-  </dialog>
 
   <!-- Verificación -->
   <section class="seccion bg-hueso" data-verifica>
@@ -151,7 +126,6 @@ const esquema = {
               <p class="kicker text-tinta/50">Constancia de servicio</p>
               <p class="mt-1 font-display text-2xl font-bold">CS-0004</p>
             </div>
-            <span class="rounded-full bg-oro/20 px-3 py-1 text-xs font-semibold text-oro-oscuro">Ejemplo</span>
           </div>
 
           <div class="relative mx-auto mt-6 w-48 sm:w-56" data-qr>
@@ -170,7 +144,6 @@ const esquema = {
             <div class="flex justify-between gap-4"><dt class="text-tinta/60">Emitido por</dt><dd class="font-semibold">Grupo Kassar</dd></div>
             <div class="flex justify-between gap-4"><dt class="text-tinta/60">Documento</dt><dd class="font-semibold">Constancia CS-0004</dd></div>
             <div class="flex justify-between gap-4"><dt class="text-tinta/60">Servicio</dt><dd class="font-semibold">Control de roedores</dd></div>
-            <p class="text-xs text-tinta/50">Datos ficticios, solo para demostración.</p>
           </dl>
         </div>
       </div>
@@ -289,76 +262,6 @@ const esquema = {
     }
   }
 
-  /* Documentos con inclinación y reflejo */
-  .tarjeta-doc {
-    --rx: 0deg;
-    --ry: 0deg;
-    display: block;
-    perspective: 1000px;
-    cursor: zoom-in;
-  }
-  .hoja {
-    position: relative;
-    display: block;
-    overflow: hidden;
-    border-radius: 0.25rem;
-    background: #fff;
-    transform: rotateX(var(--rx)) rotateY(var(--ry));
-    box-shadow: 0 30px 50px -25px rgb(0 0 0 / 0.8);
-    transition:
-      transform 0.25s ease-out,
-      box-shadow 0.3s;
-  }
-  .tarjeta-doc:hover .hoja {
-    box-shadow:
-      0 40px 70px -25px rgb(0 0 0 / 0.9),
-      0 0 0 1px rgb(245 184 31 / 0.6);
-  }
-  .reflejo {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0;
-    background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgb(255 255 255 / 0.35), transparent 55%);
-    transition: opacity 0.3s;
-  }
-  .tarjeta-doc:hover .reflejo {
-    opacity: 1;
-  }
-
-  /* Visor */
-  .visor {
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    max-height: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: rgb(5 7 10 / 0.94);
-    backdrop-filter: blur(6px);
-  }
-  .visor[open] {
-    display: flex;
-    flex-direction: column;
-    animation: entra 0.35s ease;
-  }
-  .visor::backdrop {
-    background: rgb(0 0 0 / 0.7);
-  }
-  .visor-barra {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-  }
-  .visor-cuerpo {
-    flex: 1;
-    overflow: auto;
-    padding: 0 1rem 2rem;
-  }
-
   /* Escaneo del QR */
   .barrido {
     position: absolute;
@@ -441,43 +344,6 @@ const esquema = {
     });
     requestAnimationFrame(() => elegir(0));
   }
-
-  // Documentos: inclinación y visor
-  const visor = document.getElementById('visor') as HTMLDialogElement | null;
-  document.querySelectorAll<HTMLButtonElement>('[data-doc]').forEach((tarjeta) => {
-    const hoja = tarjeta.querySelector<HTMLElement>('.hoja')!;
-    if (!sinMovimiento && matchMedia('(hover: hover)').matches) {
-      tarjeta.addEventListener('pointermove', (e) => {
-        const r = hoja.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        tarjeta.style.setProperty('--ry', `${(px - 0.5) * 12}deg`);
-        tarjeta.style.setProperty('--rx', `${(0.5 - py) * 10}deg`);
-        hoja.style.setProperty('--mx', `${px * 100}%`);
-        hoja.style.setProperty('--my', `${py * 100}%`);
-      });
-      tarjeta.addEventListener('pointerleave', () => {
-        tarjeta.style.setProperty('--ry', '0deg');
-        tarjeta.style.setProperty('--rx', '0deg');
-      });
-    }
-    tarjeta.addEventListener('click', () => {
-      if (!visor) return;
-      const origen = tarjeta.querySelector('img')!;
-      const grande = visor.querySelector<HTMLImageElement>('#visor-img')!;
-      // Se muestra la imagen más grande disponible de la serie
-      const lista = origen.getAttribute('srcset')?.split(',').map((s) => s.trim().split(' ')[0]) ?? [];
-      grande.src = lista[lista.length - 1] ?? origen.src;
-      grande.alt = origen.alt;
-      visor.querySelector('#visor-titulo')!.textContent = tarjeta.querySelector('.font-display')?.textContent ?? '';
-      visor.showModal();
-    });
-  });
-  // Cierra al tocar fuera de la imagen
-  visor?.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('img, form')) return;
-    visor.close();
-  });
 
   // Verificación demostrativa
   const verifica = document.querySelector<HTMLElement>('[data-verifica]');

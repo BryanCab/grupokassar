@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 import { enlace } from '../../data/sitio';
 import { pantallasResumen, pestos } from '../../data/pestos';
 import TourDigital from '../ui/TourDigital.astro';
+import AbanicoDocs from '../ui/AbanicoDocs.astro';
 
 const garantias = [
   { icono: 'ph:qr-code', texto: 'Documentos verificables con QR' },
@@ -24,6 +25,16 @@ const garantias = [
 
     <div class="mt-14 lg:mt-16" data-aparece>
       <TourDigital ids={pantallasResumen} />
+    </div>
+
+    <div class="mt-24 lg:mt-32">
+      <div class="mx-auto max-w-2xl text-center" data-aparece>
+        <p class="kicker text-oro">Lo que recibes</p>
+        <h3 class="mt-3 font-display text-3xl font-bold sm:text-4xl lg:text-5xl">Documentos listos para auditoría.</h3>
+      </div>
+      <div class="mt-12" data-aparece>
+        <AbanicoDocs />
+      </div>
     </div>
 
     <div class="mt-16 grid gap-6 border-t border-linea pt-10 lg:mt-20 lg:grid-cols-[1fr_auto] lg:items-center" data-aparece>
