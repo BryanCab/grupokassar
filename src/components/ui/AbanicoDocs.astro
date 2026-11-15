@@ -26,7 +26,7 @@ const docs = await Promise.all(
       docs.map((d, i) => (
         <button type="button" role="tab" data-pestana={d.id} aria-selected={i === 0 ? 'true' : 'false'} class="pestana-doc">
           {d.pestana}
-          <span class="text-xs opacity-70">· {d.paginasTotal} págs.</span>
+          <span class="text-xs opacity-70">· {d.paginasTotal} {d.paginasTotal === 1 ? "pág." : "págs."}</span>
         </button>
       ))
     }

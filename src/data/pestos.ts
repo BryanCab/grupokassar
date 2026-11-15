@@ -6,6 +6,8 @@ import constancia from '../assets/pestos/tel-constancia.webp';
 import monitoreo from '../assets/pestos/tel-monitoreo.webp';
 import revision from '../assets/pestos/tel-revision.webp';
 import cotizacion from '../assets/pestos/tel-cotizacion.webp';
+import servicios from '../assets/pestos/tel-servicios.webp';
+import documentosTel from '../assets/pestos/tel-documentos.webp';
 import type { ImageMetadata } from 'astro';
 
 /** Sitio de la plataforma que usa Grupo Kassar para documentar sus servicios */
@@ -25,6 +27,26 @@ export const pantallas = [
     imagen: portal,
     alt: 'Portal del cliente con el resumen de servicios, constancias y próximo servicio',
     chips: ['Enlace privado', 'Disponible 24/7'],
+  },
+  {
+    id: 'servicios',
+    nombre: 'Servicios',
+    icono: 'ph:list-checks',
+    titulo: 'Tu historial, servicio por servicio.',
+    texto: 'Cada visita con lo que se hizo, quién la atendió, la garantía y sus documentos listos para descargar.',
+    imagen: servicios,
+    alt: 'Historial de servicios del portal con reporte y constancia para descargar',
+    chips: ['Reporte y constancia', 'Garantía registrada'],
+  },
+  {
+    id: 'documentos',
+    nombre: 'Documentos',
+    icono: 'ph:folder-simple-lock',
+    titulo: 'La documentación de la empresa, a la mano.',
+    texto: 'Registro sanitario, póliza de responsabilidad civil, fichas técnicas y licencias para descargar cuando te los pidan.',
+    imagen: documentosTel,
+    alt: 'Documentos de la empresa disponibles para descargar en el portal',
+    chips: ['Siempre vigentes', 'Descarga directa'],
   },
   {
     id: 'agenda',
@@ -98,7 +120,7 @@ export const pantallas = [
   },
 ] as const;
 
-export const pantallasResumen = ['portal', 'agenda', 'reportes', 'constancias', 'monitoreo', 'cotizaciones'];
+export const pantallasResumen = ['portal', 'servicios', 'documentos', 'expediente'];
 
 /** Piezas de cada servicio: lo que el cliente recibe */
 export const entregables = [
@@ -176,6 +198,15 @@ export const abanicos = [
     texto: 'Desglose de conceptos, IVA, condiciones y garantía. Aquí, dos ejemplos: un restaurante con contrato mensual y una casa habitación.',
     muestra: [1, 2],
     pdf: '/documentos/cotizacion-grupo-kassar.pdf',
+  },
+  {
+    id: 'calendario',
+    pestana: 'Calendario',
+    paginasTotal: 1,
+    titulo: 'Calendario anual de servicios',
+    texto: 'Las visitas de todo el año, con el día de cada mes, los servicios incluidos y las condiciones del contrato.',
+    muestra: [1],
+    pdf: '/documentos/calendario-servicios-grupo-kassar.pdf',
   },
 ].map((d) => ({
   ...d,
