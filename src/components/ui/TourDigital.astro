@@ -1,0 +1,436 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { pantallas } from '../../data/pestos';
+
+interface Props {
+  /** Pantallas a mostrar, en orden. Sin valor, se muestran todas. */
+  ids?: readonly string[];
+}
+const { ids } = Astro.props;
+const lista = ids ? ids.map((id) => pantallas.find((p) => p.id === id)!).filter(Boolean) : [...pantallas];
+---
+
+<div data-tour class="grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20" data-auto>
+  <!-- Teléfono (primero en móvil) -->
+  <div class="relative mx-auto w-full max-w-[17.5rem] sm:max-w-[19rem] lg:order-2 lg:w-[21rem] lg:max-w-[21rem]">
+    <div class="halo" aria-hidden="true"></div>
+    <div data-telefono class="telefono relative">
+      <div class="marco">
+        <span class="isla" aria-hidden="true"></span>
+        <div class="pantalla">
+          {
+            lista.map((p, i) => (
+              <Image
+                src={p.imagen}
+                alt={p.alt}
+                data-pantalla={p.id}
+                data-activa={i === 0 ? '' : undefined}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                widths={[320, 480, 600]}
+                sizes="(min-width: 1024px) 336px, 280px"
+                class="imagen-pantalla"
+              />
+            ))
+          }
+        </div>
+        <span class="brillo" aria-hidden="true"></span>
+      </div>
+
+      <!-- Etiquetas flotantes: cambian con cada pantalla -->
+      {
+        lista.map((p, i) => (
+          <div data-flota={p.id} data-activa={i === 0 ? '' : undefined} class="flotantes" aria-hidden="true">
+            {p.chips.map((c, k) => (
+              <span class:list={['chip', k === 0 ? 'chip-a' : 'chip-b']}>
+                <Icon name={k === 0 ? p.icono : 'ph:check-circle-fill'} class="size-4 shrink-0 text-oro" />
+                {c}
+              </span>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Pestañas y texto -->
+  <div class="min-w-0 lg:order-1">
+    <div role="tablist" aria-label="Pantallas del respaldo digital" class="-mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] lg:mx-0 lg:flex-wrap lg:gap-3 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+      {
+        lista.map((p, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${p.id}`}
+            data-tab={p.id}
+            data-activa={i === 0 ? '' : undefined}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            aria-controls={`panel-${p.id}`}
+            tabindex={i === 0 ? 0 : -1}
+            class="pestana"
+          >
+            <Icon name={p.icono} class="size-5 shrink-0" />
+            <span class="font-display text-sm font-semibold whitespace-nowrap lg:text-[0.95rem]">{p.nombre}</span>
+            <span class="barra" aria-hidden="true"></span>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="mt-6 grid lg:mt-8">
+      {
+        lista.map((p, i) => (
+          <div
+            role="tabpanel"
+            id={`panel-${p.id}`}
+            aria-labelledby={`tab-${p.id}`}
+            data-panel={p.id}
+            data-activa={i === 0 ? '' : undefined}
+            class="panel-texto"
+          >
+            <h3 class="text-2xl text-white sm:text-3xl lg:text-4xl">{p.titulo}</h3>
+            <p class="mt-4 max-w-lg text-white/70 lg:text-lg">{p.texto}</p>
+            <ul class="mt-5 flex flex-wrap gap-2">
+              {
+                p.chips.map((c) => (
+                  <li class="inline-flex items-center gap-1.5 rounded-full border border-linea bg-white/5 px-3 py-1.5 text-xs text-white/85">
+                    <Icon name="ph:check-circle-fill" class="size-3.5 text-oro" />
+                    {c}
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+    <p class="mt-6 text-xs text-niebla">Capturas reales de la plataforma con datos ficticios. Toca las pestañas, desliza o mueve el cursor sobre el teléfono.</p>
+  </div>
+</div>
+
+<style>
+  .halo {
+    position: absolute;
+    inset: -12% -22%;
+    background:
+      radial-gradient(closest-side, rgb(245 184 31 / 0.28), transparent 70%),
+      radial-gradient(closest-side at 70% 80%, rgb(15 85 131 / 0.35), transparent 75%);
+    filter: blur(24px);
+    pointer-events: none;
+    animation: respira 7s ease-in-out infinite;
+  }
+  .telefono {
+    --rx: 0deg;
+    --ry: 0deg;
+    transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform 0.25s ease-out;
+    will-change: transform;
+  }
+  .telefono[data-quieto] {
+    transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .marco {
+    position: relative;
+    aspect-ratio: 390 / 844;
+    border-radius: 2.6rem;
+    padding: 0.55rem;
+    background: linear-gradient(145deg, #2a313d, #080a0e 55%, #20252e);
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.1),
+      0 40px 80px -30px rgb(0 0 0 / 0.85),
+      0 0 60px -20px rgb(245 184 31 / 0.25);
+  }
+  .pantalla {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 2.15rem;
+    background: #fff;
+  }
+  .isla {
+    position: absolute;
+    z-index: 5;
+    top: 1.05rem;
+    left: 50%;
+    width: 28%;
+    height: 1.3rem;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: #05070a;
+  }
+  .brillo {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 38%, rgb(255 255 255 / 0.09) 46%, transparent 54%);
+    background-size: 250% 100%;
+    background-position: 130% 0;
+    animation: barrido 6s ease-in-out infinite;
+  }
+  .pantalla :global(.imagen-pantalla) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0;
+    transform: scale(1.05) translateY(2%);
+    transition:
+      opacity 0.6s ease,
+      transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .pantalla :global(.imagen-pantalla[data-activa]) {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Etiquetas que flotan alrededor del teléfono */
+  .flotantes {
+    pointer-events: none;
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .flotantes {
+      display: block;
+    }
+  }
+  .chip {
+    position: absolute;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    background: rgb(20 25 34 / 0.92);
+    border: 1px solid var(--color-linea);
+    box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.7);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transition:
+      opacity 0.5s ease,
+      transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .chip-a {
+    top: 14%;
+    left: -22%;
+    transform: translateX(-16px);
+  }
+  .chip-b {
+    bottom: 16%;
+    right: -20%;
+    transform: translateX(16px);
+  }
+  .flotantes[data-activa] .chip {
+    opacity: 1;
+    transform: none;
+    animation: flota 5s ease-in-out infinite;
+  }
+  .flotantes[data-activa] .chip-b {
+    animation-delay: -2.4s;
+  }
+
+  /* Pestañas */
+  .pestana {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 3rem;
+    padding: 0.7rem 1rem;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    border: 1px solid var(--color-linea);
+    background: rgb(255 255 255 / 0.03);
+    color: rgb(255 255 255 / 0.65);
+    text-align: left;
+    transition:
+      color 0.25s,
+      border-color 0.25s,
+      background 0.25s,
+      transform 0.25s;
+  }
+  .pestana:hover {
+    color: #fff;
+    border-color: rgb(245 184 31 / 0.55);
+    transform: translateY(-2px);
+  }
+  .pestana[data-activa] {
+    color: var(--color-tinta);
+    border-color: var(--color-oro);
+    background: var(--color-oro);
+  }
+  .barra {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: var(--color-tinta);
+    opacity: 0.55;
+  }
+  [data-auto] .pestana[data-activa] .barra {
+    animation: progreso var(--duracion, 6s) linear forwards;
+  }
+
+  /* Texto: todos los paneles ocupan la misma celda y se funden */
+  .panel-texto {
+    grid-area: 1 / 1;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.45s ease,
+      transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+      visibility 0s 0.45s;
+  }
+  .panel-texto[data-activa] {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.12s, 0.12s, 0s;
+  }
+
+  @keyframes progreso {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes flota {
+    50% {
+      translate: 0 -8px;
+    }
+  }
+  @keyframes respira {
+    50% {
+      opacity: 0.7;
+      transform: scale(1.06);
+    }
+  }
+  @keyframes barrido {
+    0%,
+    55% {
+      background-position: 130% 0;
+    }
+    100% {
+      background-position: -60% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pantalla :global(.imagen-pantalla),
+    .panel-texto {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const DURACION = 6000;
+  const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const puntero = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-tour]').forEach((raiz) => {
+    const pestanas = [...raiz.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const pasar = (id: string) => {
+      raiz.querySelectorAll<HTMLElement>('[data-pantalla],[data-panel],[data-flota],[data-tab]').forEach((el) => {
+        const suyo = el.dataset.pantalla ?? el.dataset.panel ?? el.dataset.flota ?? el.dataset.tab;
+        const activa = suyo === id;
+        el.toggleAttribute('data-activa', activa);
+        if (el.matches('[data-tab]')) {
+          el.setAttribute('aria-selected', String(activa));
+          el.tabIndex = activa ? 0 : -1;
+        }
+      });
+      // Reinicia la barra de progreso de la pestaña activa
+      const barra = raiz.querySelector<HTMLElement>('[data-tab][data-activa] .barra');
+      if (barra) {
+        barra.style.animation = 'none';
+        void barra.offsetWidth;
+        barra.style.animation = '';
+      }
+    };
+    const indice = () => Math.max(0, pestanas.findIndex((p) => p.hasAttribute('data-activa')));
+    const ir = (i: number, manual = false) => {
+      const siguiente = pestanas[(i + pestanas.length) % pestanas.length];
+      pasar(siguiente.dataset.tab!);
+      if (manual) detener();
+      if (innerWidth < 1024) siguiente.parentElement!.scrollTo({ left: siguiente.offsetLeft - 16, behavior: 'smooth' });
+    };
+
+    // Avance automático mientras el recorrido está a la vista
+    let reloj: number | undefined;
+    let visible = false;
+    const detener = () => {
+      clearInterval(reloj);
+      raiz.removeAttribute('data-auto');
+    };
+    const arrancar = () => {
+      if (sinMovimiento || !raiz.hasAttribute('data-auto') || !visible) return;
+      clearInterval(reloj);
+      raiz.style.setProperty('--duracion', `${DURACION}ms`);
+      reloj = window.setInterval(() => ir(indice() + 1), DURACION);
+    };
+    if (sinMovimiento) raiz.removeAttribute('data-auto');
+    new IntersectionObserver(
+      ([e]) => {
+        visible = e.isIntersecting;
+        if (visible) {
+          pasar(pestanas[indice()].dataset.tab!);
+          arrancar();
+        } else clearInterval(reloj);
+      },
+      { threshold: 0.4 },
+    ).observe(raiz);
+
+    pestanas.forEach((p, i) => {
+      p.addEventListener('click', () => ir(i, true));
+      p.addEventListener('keydown', (e) => {
+        const salto = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+        if (salto) {
+          e.preventDefault();
+          ir(indice() + salto, true);
+          pestanas[indice()].focus();
+        }
+      });
+    });
+
+    // Gesto de deslizar sobre el teléfono
+    const tel = raiz.querySelector<HTMLElement>('[data-telefono]')!;
+    let x0: number | null = null;
+    tel.addEventListener('touchstart', (e) => (x0 = e.touches[0].clientX), { passive: true });
+    tel.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) ir(indice() + (dx < 0 ? 1 : -1), true);
+      x0 = null;
+    });
+
+    // Inclinación 3D siguiendo el cursor
+    if (puntero && !sinMovimiento) {
+      tel.addEventListener('pointermove', (e) => {
+        const r = tel.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        tel.removeAttribute('data-quieto');
+        tel.style.setProperty('--ry', `${px * 14}deg`);
+        tel.style.setProperty('--rx', `${-py * 10}deg`);
+      });
+      tel.addEventListener('pointerleave', () => {
+        tel.setAttribute('data-quieto', '');
+        tel.style.setProperty('--ry', '0deg');
+        tel.style.setProperty('--rx', '0deg');
+      });
+    }
+  });
+</script>

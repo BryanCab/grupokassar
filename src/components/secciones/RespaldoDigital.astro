@@ -1,0 +1,55 @@
+---
+import { Icon } from 'astro-icon/components';
+import { enlace } from '../../data/sitio';
+import { pantallasResumen, pestos } from '../../data/pestos';
+import TourDigital from '../ui/TourDigital.astro';
+
+const garantias = [
+  { icono: 'ph:qr-code', texto: 'Documentos verificables con QR' },
+  { icono: 'ph:cloud-check', texto: 'Historial siempre disponible' },
+  { icono: 'ph:lock-key', texto: 'Tus datos, solo para ti' },
+];
+---
+
+<section class="seccion diferida relative isolate overflow-hidden border-t border-linea bg-grafito text-white">
+  <div class="absolute inset-0 -z-10 bg-[radial-gradient(50%_45%_at_85%_20%,rgb(245_184_31/0.10),transparent_70%),radial-gradient(45%_40%_at_5%_90%,rgb(15_85_131/0.22),transparent_70%)]" aria-hidden="true"></div>
+  <div class="absolute inset-0 -z-10 opacity-[0.05] [background-image:linear-gradient(var(--color-niebla)_1px,transparent_1px),linear-gradient(90deg,var(--color-niebla)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(70%_70%_at_50%_40%,#000,transparent)]" aria-hidden="true"></div>
+
+  <div class="contenedor">
+    <div class="max-w-3xl" data-aparece>
+      <p class="kicker text-oro">Respaldo digital</p>
+      <h2 class="titulo mt-3">Cada servicio queda registrado. Y tú puedes verlo.</h2>
+      <p class="mt-5 max-w-2xl text-lg text-white/70">Trabajamos con una plataforma que documenta cada visita: reportes, constancias, calendario, plano de monitoreo y documentos, todo en tu propio portal.</p>
+    </div>
+
+    <div class="mt-14 lg:mt-16" data-aparece>
+      <TourDigital ids={pantallasResumen} />
+    </div>
+
+    <div class="mt-16 grid gap-6 border-t border-linea pt-10 lg:mt-20 lg:grid-cols-[1fr_auto] lg:items-center" data-aparece>
+      <ul class="grid gap-4 sm:grid-cols-3 lg:gap-8">
+        {
+          garantias.map((g) => (
+            <li class="flex items-center gap-3 text-sm text-white/80">
+              <span class="grid size-10 shrink-0 place-items-center rounded-full border border-linea bg-white/5 text-oro"><Icon name={g.icono} class="size-5" /></span>
+              {g.texto}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <a href={enlace('/respaldo-digital/')} class="btn btn-oro group">
+          Conoce el respaldo digital
+          <Icon name="ph:arrow-right" class="size-4 transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+    </div>
+
+    <p class="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-niebla" data-aparece>
+      <Icon name="ph:seal-check" class="size-4 text-oro" />
+      Servicio documentado con
+      <a href={pestos.url} target="_blank" rel="noopener" class="font-display font-semibold text-white underline decoration-oro/60 underline-offset-4 transition-colors hover:text-oro">{pestos.nombre}</a>,
+      la plataforma de gestión que usa Grupo Kassar.
+    </p>
+  </div>
+</section>

@@ -47,6 +47,7 @@ export const navegacion = [
   { nombre: 'Control de patógenos', href: enlace('/control-de-patogenos/') },
   { nombre: 'Sectores', href: enlace('/sectores/') },
   { nombre: 'Nosotros', href: enlace('/nosotros/') },
+  { nombre: 'Respaldo digital', href: enlace('/respaldo-digital/') },
   { nombre: 'Contacto', href: enlace('/contacto/') },
 ];
 

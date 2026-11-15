@@ -1,0 +1,511 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Cabecera from '../components/ui/Cabecera.astro';
+import LlamadoFinal from '../components/ui/LlamadoFinal.astro';
+import TourDigital from '../components/ui/TourDigital.astro';
+import { documentos, entregables, flujo, preguntas, pestos } from '../data/pestos';
+
+// Código QR ilustrativo (no es un código real): tres marcas de posición y módulos repartidos de forma estable
+const N = 25;
+const reservado = (x: number, y: number) => (x < 8 && y < 8) || (x > N - 9 && y < 8) || (x < 8 && y > N - 9);
+const modulos: Array<[number, number]> = [];
+for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!reservado(x, y) && ((x * 7 + y * 13 + x * y * 3) % 5 < 2 || (x + y) % 11 === 0)) modulos.push([x, y]);
+const marca = (ox: number, oy: number) => [
+  { x: ox, y: oy, w: 7, h: 7, c: '#0b0e13' },
+  { x: ox + 1, y: oy + 1, w: 5, h: 5, c: '#fff' },
+  { x: ox + 2, y: oy + 2, w: 3, h: 3, c: '#0b0e13' },
+];
+const marcas = [...marca(0, 0), ...marca(N - 7, 0), ...marca(0, N - 7)];
+
+const esquema = {
+  '@type': 'FAQPage',
+  mainEntity: preguntas.map((q) => ({ '@type': 'Question', name: q.p, acceptedAnswer: { '@type': 'Answer', text: q.r } })),
+};
+---
+
+<Base
+  titulo="Respaldo digital de cada servicio"
+  descripcion="Cada servicio de Grupo Kassar queda documentado: reportes con fotos y firma, constancias con folio, calendario, plano de monitoreo y portal privado para consultar tu historial."
+  esquema={esquema}
+>
+  <Cabecera kicker="Respaldo digital" titulo="Cada servicio, documentado y a un clic." texto="Tus reportes, constancias, calendario y plano de monitoreo viven en un portal privado. Los consultas cuando quieras, sin pedirlos." />
+
+  <!-- Recorrido interactivo -->
+  <section class="seccion relative isolate overflow-hidden bg-grafito text-white">
+    <div class="absolute inset-0 -z-10 bg-[radial-gradient(50%_45%_at_85%_20%,rgb(245_184_31/0.10),transparent_70%),radial-gradient(45%_40%_at_5%_90%,rgb(15_85_131/0.22),transparent_70%)]" aria-hidden="true"></div>
+    <div class="contenedor">
+      <div class="max-w-3xl" data-aparece>
+        <p class="kicker text-oro">Recorre la plataforma</p>
+        <h2 class="titulo mt-3">Así se ve tu servicio por dentro.</h2>
+      </div>
+      <div class="mt-14" data-aparece>
+        <TourDigital />
+      </div>
+    </div>
+  </section>
+
+  <!-- Del servicio al documento -->
+  <section class="seccion bg-papel" data-flujo>
+    <div class="contenedor">
+      <div class="max-w-3xl" data-aparece>
+        <p class="kicker text-oro-oscuro">De la visita al documento</p>
+        <h2 class="titulo mt-3">Nada se queda en la memoria de nadie.</h2>
+        <p class="mt-5 max-w-2xl text-lg text-tinta/70">Elige cada etapa y mira qué queda registrado.</p>
+      </div>
+
+      <div class="mt-14 grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-16" data-aparece>
+        <ol class="relative grid gap-2" role="tablist" aria-label="Etapas de un servicio" aria-orientation="vertical">
+          <span class="absolute top-6 bottom-6 left-[1.65rem] w-px bg-tinta/15" aria-hidden="true"></span>
+          <span data-flujo-linea class="absolute top-6 left-[1.65rem] w-px origin-top bg-oro transition-[height] duration-500" style="height:0" aria-hidden="true"></span>
+          {
+            flujo.map((f, i) => (
+              <li>
+                <button type="button" role="tab" data-etapa={i} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} aria-controls={`etapa-${i}`} class="etapa group">
+                  <span class="etapa-icono"><Icon name={f.icono} class="size-5" /></span>
+                  <span class="text-left">
+                    <span class="block text-xs font-semibold tracking-widest text-tinta/50 uppercase">Etapa {i + 1}</span>
+                    <span class="block font-display text-lg font-bold">{f.titulo}</span>
+                  </span>
+                </button>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="relative min-h-72 overflow-hidden rounded-sm border border-tinta/10 bg-tinta p-8 text-white shadow-[0_30px_60px_-30px_rgb(11_14_19/0.6)] lg:p-12">
+          <span class="pointer-events-none absolute -top-10 -right-4 font-display text-[11rem] leading-none font-bold text-transparent opacity-60 [-webkit-text-stroke:1px_rgb(245_184_31/0.35)]" data-etapa-numero aria-hidden="true">1</span>
+          {
+            flujo.map((f, i) => (
+              <div id={`etapa-${i}`} role="tabpanel" data-detalle={i} data-activa={i === 0 ? '' : undefined} class="detalle">
+                <span class="grid size-14 place-items-center rounded-full bg-oro text-tinta"><Icon name={f.icono} class="size-7" /></span>
+                <h3 class="mt-6 text-3xl lg:text-4xl">{f.titulo}</h3>
+                <p class="mt-4 max-w-md text-white/75 lg:text-lg">{f.texto}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Documentos -->
+  <section class="seccion bg-tinta text-white">
+    <div class="contenedor">
+      <div class="max-w-3xl" data-aparece>
+        <p class="kicker text-oro">Lo que recibes</p>
+        <h2 class="titulo mt-3">Documentos listos para auditoría.</h2>
+        <p class="mt-5 max-w-2xl text-lg text-white/70">Mueve el cursor sobre cada documento y haz clic para verlo completo. Son ejemplos con datos ficticios.</p>
+      </div>
+      <ul class="mt-14 grid gap-8 md:grid-cols-3 lg:gap-10">
+        {
+          documentos.map((d) => (
+            <li data-aparece>
+              <button type="button" data-doc={d.id} class="tarjeta-doc group w-full text-left" aria-label={`Ver ${d.nombre} en grande`}>
+                <span class="hoja">
+                  <Image src={d.imagen} alt={d.alt} widths={[400, 640, 900]} sizes="(min-width: 768px) 30vw, 90vw" class="w-full" loading="lazy" />
+                  <span class="reflejo" aria-hidden="true"></span>
+                </span>
+                <span class="mt-5 flex items-start justify-between gap-4">
+                  <span>
+                    <span class="block font-display text-xl font-bold">{d.nombre}</span>
+                    <span class="mt-1 block text-sm text-niebla">{d.texto}</span>
+                  </span>
+                  <span class="mt-1 grid size-9 shrink-0 place-items-center rounded-full border border-linea text-oro transition-colors group-hover:border-oro group-hover:bg-oro group-hover:text-tinta"><Icon name="ph:arrows-out-simple" class="size-4" /></span>
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <dialog id="visor" class="visor" aria-label="Vista ampliada del documento">
+    <form method="dialog" class="visor-barra">
+      <p id="visor-titulo" class="font-display font-bold text-white"></p>
+      <button class="grid size-11 place-items-center rounded-full border border-white/30 text-white hover:border-oro hover:text-oro" aria-label="Cerrar"><Icon name="ph:x" class="size-5" /></button>
+    </form>
+    <div class="visor-cuerpo"><img id="visor-img" alt="" class="mx-auto h-auto w-full max-w-4xl bg-white shadow-2xl" /></div>
+  </dialog>
+
+  <!-- Verificación -->
+  <section class="seccion bg-hueso" data-verifica>
+    <div class="contenedor grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+      <div data-aparece>
+        <p class="kicker text-oro-oscuro">Verificable</p>
+        <h2 class="titulo mt-3">Comprueba que tu documento es auténtico.</h2>
+        <p class="mt-5 max-w-lg text-lg text-tinta/70">Cada reporte y constancia incluye un código QR. Al escanearlo se abre una página pública que confirma que el documento existe y que sus datos coinciden. Pruébalo con esta demostración.</p>
+        <ul class="mt-6 grid gap-3 text-sm text-tinta/80">
+          <li class="flex items-center gap-3"><Icon name="ph:check-circle-fill" class="size-5 text-oro-oscuro" />Útil ante auditorías e inspecciones</li>
+          <li class="flex items-center gap-3"><Icon name="ph:check-circle-fill" class="size-5 text-oro-oscuro" />Evita documentos alterados o falsos</li>
+          <li class="flex items-center gap-3"><Icon name="ph:check-circle-fill" class="size-5 text-oro-oscuro" />Sin cuentas ni contraseñas para verificar</li>
+        </ul>
+      </div>
+
+      <div class="mx-auto w-full max-w-md" data-aparece>
+        <div class="relative overflow-hidden rounded-sm border border-tinta/10 bg-white p-6 shadow-[0_30px_60px_-30px_rgb(11_14_19/0.4)] sm:p-8">
+          <div class="flex items-center justify-between gap-4 border-b border-tinta/10 pb-4">
+            <div>
+              <p class="kicker text-tinta/50">Constancia de servicio</p>
+              <p class="mt-1 font-display text-2xl font-bold">CS-0004</p>
+            </div>
+            <span class="rounded-full bg-oro/20 px-3 py-1 text-xs font-semibold text-oro-oscuro">Ejemplo</span>
+          </div>
+
+          <div class="relative mx-auto mt-6 w-48 sm:w-56" data-qr>
+            <svg viewBox={`-1 -1 ${N + 2} ${N + 2}`} class="block w-full rounded-sm border border-tinta/10 bg-white p-1" role="img" aria-label="Código QR ilustrativo" shape-rendering="crispEdges">
+              {modulos.map(([x, y]) => <rect x={x} y={y} width="1" height="1" fill="#0b0e13" />)}
+              {marcas.map((m) => <rect x={m.x} y={m.y} width={m.w} height={m.h} fill={m.c} />)}
+            </svg>
+            <span data-barrido class="barrido" aria-hidden="true"></span>
+            <span data-sello class="sello" aria-hidden="true"><Icon name="ph:seal-check-fill" class="size-14" /></span>
+          </div>
+
+          <button type="button" data-escanear class="btn btn-tinta mt-6 w-full"><Icon name="ph:scan" class="size-5" /><span data-escanear-texto>Simular escaneo</span></button>
+
+          <dl data-resultado hidden class="mt-6 grid gap-3 rounded-sm border border-[#1f9d55]/30 bg-[#1f9d55]/10 p-4 text-sm">
+            <div class="flex items-center gap-2 font-display text-base font-bold text-[#157a42]"><Icon name="ph:check-circle-fill" class="size-5" />Documento auténtico</div>
+            <div class="flex justify-between gap-4"><dt class="text-tinta/60">Emitido por</dt><dd class="font-semibold">Grupo Kassar</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-tinta/60">Documento</dt><dd class="font-semibold">Constancia CS-0004</dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-tinta/60">Servicio</dt><dd class="font-semibold">Control de roedores</dd></div>
+            <p class="text-xs text-tinta/50">Datos ficticios, solo para demostración.</p>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Entregables -->
+  <section class="seccion bg-papel">
+    <div class="contenedor">
+      <div class="max-w-3xl" data-aparece>
+        <p class="kicker text-oro-oscuro">Todo en tu portal</p>
+        <h2 class="titulo mt-3">Lo que tu empresa tiene siempre a la mano.</h2>
+      </div>
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+        {
+          entregables.map((e) => (
+            <li class="panel !p-7" data-aparece>
+              <span class="panel-icono"><Icon name={e.icono} class="size-6" /></span>
+              <h3 class="mt-5 text-xl">{e.titulo}</h3>
+              <p class="mt-2 text-sm text-tinta/70">{e.texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Preguntas -->
+  <section class="seccion bg-hueso">
+    <div class="contenedor grid gap-12 lg:grid-cols-[2fr_3fr] lg:gap-20">
+      <div data-aparece>
+        <p class="kicker text-oro-oscuro">Preguntas frecuentes</p>
+        <h2 class="titulo mt-3">Lo que suelen preguntarnos.</h2>
+        <div class="mt-8 rounded-sm border border-tinta/10 bg-white p-6">
+          <p class="kicker text-tinta/50">La tecnología detrás</p>
+          <p class="mt-3 text-sm text-tinta/75">Grupo Kassar documenta sus servicios con <strong>{pestos.nombre}</strong>, una plataforma de gestión para empresas de control de plagas.</p>
+          <a href={pestos.url} target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-tinta underline decoration-oro underline-offset-4 hover:text-oro-oscuro">Conocer {pestos.nombre}<Icon name="ph:arrow-up-right" class="size-4" /></a>
+        </div>
+      </div>
+      <div class="grid gap-3" data-aparece>
+        {
+          preguntas.map((q) => (
+            <details class="pregunta group rounded-sm border border-tinta/10 bg-white">
+              <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-display font-bold [&::-webkit-details-marker]:hidden">
+                {q.p}
+                <span class="grid size-8 shrink-0 place-items-center rounded-full bg-oro/20 text-oro-oscuro transition-transform duration-300 group-open:rotate-45"><Icon name="ph:plus" class="size-4" /></span>
+              </summary>
+              <p class="px-5 pb-5 text-sm leading-relaxed text-tinta/75">{q.r}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <LlamadoFinal titulo="Servicio profesional, con todo documentado." />
+</Base>
+
+<style>
+  .etapa {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 1rem;
+    min-height: 4rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.25rem;
+    color: rgb(11 14 19 / 0.6);
+    transition:
+      background 0.25s,
+      color 0.25s,
+      transform 0.25s;
+  }
+  .etapa:hover {
+    background: rgb(11 14 19 / 0.04);
+    transform: translateX(4px);
+  }
+  .etapa[aria-selected='true'] {
+    color: var(--color-tinta);
+    background: #fff;
+    box-shadow: 0 14px 30px -18px rgb(11 14 19 / 0.4);
+  }
+  .etapa-icono {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    border: 1px solid rgb(11 14 19 / 0.15);
+    background: var(--color-papel);
+    transition:
+      background 0.25s,
+      border-color 0.25s,
+      transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .etapa[aria-selected='true'] .etapa-icono {
+    background: var(--color-oro);
+    border-color: var(--color-oro);
+    transform: scale(1.1);
+  }
+  .detalle {
+    position: relative;
+    display: none;
+  }
+  .detalle[data-activa] {
+    display: block;
+    animation: entra 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes entra {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+  }
+
+  /* Documentos con inclinación y reflejo */
+  .tarjeta-doc {
+    --rx: 0deg;
+    --ry: 0deg;
+    display: block;
+    perspective: 1000px;
+    cursor: zoom-in;
+  }
+  .hoja {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    background: #fff;
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    box-shadow: 0 30px 50px -25px rgb(0 0 0 / 0.8);
+    transition:
+      transform 0.25s ease-out,
+      box-shadow 0.3s;
+  }
+  .tarjeta-doc:hover .hoja {
+    box-shadow:
+      0 40px 70px -25px rgb(0 0 0 / 0.9),
+      0 0 0 1px rgb(245 184 31 / 0.6);
+  }
+  .reflejo {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgb(255 255 255 / 0.35), transparent 55%);
+    transition: opacity 0.3s;
+  }
+  .tarjeta-doc:hover .reflejo {
+    opacity: 1;
+  }
+
+  /* Visor */
+  .visor {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(5 7 10 / 0.94);
+    backdrop-filter: blur(6px);
+  }
+  .visor[open] {
+    display: flex;
+    flex-direction: column;
+    animation: entra 0.35s ease;
+  }
+  .visor::backdrop {
+    background: rgb(0 0 0 / 0.7);
+  }
+  .visor-barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  .visor-cuerpo {
+    flex: 1;
+    overflow: auto;
+    padding: 0 1rem 2rem;
+  }
+
+  /* Escaneo del QR */
+  .barrido {
+    position: absolute;
+    left: -4%;
+    right: -4%;
+    top: 0;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--color-oro);
+    box-shadow: 0 0 18px 4px rgb(245 184 31 / 0.7);
+    opacity: 0;
+  }
+  [data-qr][data-escaneando] .barrido {
+    opacity: 1;
+    animation: barrido-qr 1.6s ease-in-out 1;
+  }
+  .sello {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #1f9d55;
+    background: rgb(255 255 255 / 0.82);
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 0.4s,
+      transform 0.5s cubic-bezier(0.2, 1.4, 0.3, 1);
+  }
+  [data-qr][data-listo] .sello {
+    opacity: 1;
+    transform: scale(1);
+  }
+  @keyframes barrido-qr {
+    0% {
+      top: 0;
+    }
+    50% {
+      top: 100%;
+    }
+    100% {
+      top: 0;
+    }
+  }
+  .pregunta[open] {
+    border-color: rgb(245 184 31 / 0.7);
+  }
+</style>
+
+<script>
+  const sinMovimiento = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Etapas del servicio
+  const flujo = document.querySelector<HTMLElement>('[data-flujo]');
+  if (flujo) {
+    const botones = [...flujo.querySelectorAll<HTMLButtonElement>('[data-etapa]')];
+    const detalles = [...flujo.querySelectorAll<HTMLElement>('[data-detalle]')];
+    const numero = flujo.querySelector<HTMLElement>('[data-etapa-numero]')!;
+    const linea = flujo.querySelector<HTMLElement>('[data-flujo-linea]')!;
+    const elegir = (i: number) => {
+      botones.forEach((b, k) => {
+        b.setAttribute('aria-selected', String(k === i));
+        b.tabIndex = k === i ? 0 : -1;
+      });
+      detalles.forEach((d, k) => d.toggleAttribute('data-activa', k === i));
+      numero.textContent = String(i + 1);
+      const destino = botones[i].closest('li')!;
+      linea.style.height = `${destino.offsetTop + destino.offsetHeight / 2 - 24}px`;
+    };
+    botones.forEach((b, i) => {
+      b.addEventListener('click', () => elegir(i));
+      b.addEventListener('keydown', (e) => {
+        const salto = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+        if (!salto) return;
+        e.preventDefault();
+        const n = (i + salto + botones.length) % botones.length;
+        elegir(n);
+        botones[n].focus();
+      });
+    });
+    requestAnimationFrame(() => elegir(0));
+  }
+
+  // Documentos: inclinación y visor
+  const visor = document.getElementById('visor') as HTMLDialogElement | null;
+  document.querySelectorAll<HTMLButtonElement>('[data-doc]').forEach((tarjeta) => {
+    const hoja = tarjeta.querySelector<HTMLElement>('.hoja')!;
+    if (!sinMovimiento && matchMedia('(hover: hover)').matches) {
+      tarjeta.addEventListener('pointermove', (e) => {
+        const r = hoja.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        tarjeta.style.setProperty('--ry', `${(px - 0.5) * 12}deg`);
+        tarjeta.style.setProperty('--rx', `${(0.5 - py) * 10}deg`);
+        hoja.style.setProperty('--mx', `${px * 100}%`);
+        hoja.style.setProperty('--my', `${py * 100}%`);
+      });
+      tarjeta.addEventListener('pointerleave', () => {
+        tarjeta.style.setProperty('--ry', '0deg');
+        tarjeta.style.setProperty('--rx', '0deg');
+      });
+    }
+    tarjeta.addEventListener('click', () => {
+      if (!visor) return;
+      const origen = tarjeta.querySelector('img')!;
+      const grande = visor.querySelector<HTMLImageElement>('#visor-img')!;
+      // Se muestra la imagen más grande disponible de la serie
+      const lista = origen.getAttribute('srcset')?.split(',').map((s) => s.trim().split(' ')[0]) ?? [];
+      grande.src = lista[lista.length - 1] ?? origen.src;
+      grande.alt = origen.alt;
+      visor.querySelector('#visor-titulo')!.textContent = tarjeta.querySelector('.font-display')?.textContent ?? '';
+      visor.showModal();
+    });
+  });
+  // Cierra al tocar fuera de la imagen
+  visor?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('img, form')) return;
+    visor.close();
+  });
+
+  // Verificación demostrativa
+  const verifica = document.querySelector<HTMLElement>('[data-verifica]');
+  if (verifica) {
+    const qr = verifica.querySelector<HTMLElement>('[data-qr]')!;
+    const boton = verifica.querySelector<HTMLButtonElement>('[data-escanear]')!;
+    const texto = verifica.querySelector<HTMLElement>('[data-escanear-texto]')!;
+    const resultado = verifica.querySelector<HTMLElement>('[data-resultado]')!;
+    boton.addEventListener('click', () => {
+      if (qr.hasAttribute('data-listo')) {
+        qr.removeAttribute('data-listo');
+        resultado.hidden = true;
+        texto.textContent = 'Simular escaneo';
+        return;
+      }
+      boton.disabled = true;
+      texto.textContent = 'Verificando…';
+      qr.setAttribute('data-escaneando', '');
+      setTimeout(
+        () => {
+          qr.removeAttribute('data-escaneando');
+          qr.setAttribute('data-listo', '');
+          resultado.hidden = false;
+          texto.textContent = 'Volver a probar';
+          boton.disabled = false;
+        },
+        sinMovimiento ? 100 : 1600,
+      );
+    });
+  }
+</script>
