@@ -13,6 +13,8 @@ export interface Plaga {
   riesgos: string[];
   metodos: string[];
   especies?: string[];
+  porQueActuar?: string;
+  datos?: string[];
 }
 
 export const categorias: Record<Categoria, string> = {
@@ -132,10 +134,13 @@ export const plagas: Plaga[] = [
     fotoAlt: 'Chinche de cama adulta',
     resumen: 'Tratamiento discreto para hogares y hoteles.',
     descripcion:
-      'Las chinches viajan en maletas, ropa y muebles, y se esconden en colchones y cabeceras. Requieren un tratamiento minucioso, porque una aplicación superficial suele dejar focos activos.',
+      'La chinche de cama se adhiere a tu ropa sin que lo notes y, al llegar a casa, se esconde en las costuras del colchón, enchufes, bases de cama, grietas en paredes y cualquier lugar recóndito del inmueble. La propagación es rápida en condiciones óptimas, ya que una hembra adulta puede poner de 1 a 5 huevos al día.',
     senales: ['Picaduras en línea al despertar', 'Pequeñas manchas oscuras en colchones', 'Mudas de piel en costuras y cabeceras'],
     riesgos: ['Picaduras y mala calidad de sueño', 'Quejas y daño reputacional en hospedaje'],
     metodos: ['Inspección de colchones y muebles', 'Aspersión y nebulización', 'Lavado y desinfección de textiles'],
+    porQueActuar:
+      'Se alimentan de tu sangre mientras duermes. Generan picaduras en serie, intensa picazón, insomnio y una alta carga de estrés emocional.',
+    datos: ['Una chinche adulta puede sobrevivir más de 1 año sin comer, esperando a su próxima víctima.', 'Las crías necesitan alimentarse de sangre al menos una vez en cada una de sus 5 etapas para poder crecer, e incluso detectan el olor humano.'],
   },
   {
     slug: 'murcielagos',
@@ -146,10 +151,13 @@ export const plagas: Plaga[] = [
     fotoAlt: 'Murciélago sostenido con guantes de protección',
     resumen: 'Reubicación y prevención sin dañar a la fauna.',
     descripcion:
-      'Los murciélagos son importantes para el ecosistema, pero sus colonias en techos y plafones dañan estructuras y generan acumulaciones de excremento. Buscamos reubicarlos o ahuyentarlos sin causarles daño.',
+      'Los murciélagos son inofensivos y no se consideran una plaga; al contrario, ayudan a eliminar otras plagas. Sin embargo, cuando se refugian en techos, almacenes y plafones es necesario gestionar su presencia, ya que sus excrementos acumulados desarrollan el hongo de la histoplasmosis, una infección pulmonar grave.',
     senales: ['Excremento acumulado en techos o pisos', 'Ruidos y olor fuerte en plafones', 'Salida de ejemplares al atardecer'],
     riesgos: ['Daño a estructuras', 'Acumulación de excremento en áreas de trabajo'],
     metodos: ['Repelentes', 'Hidrolavado y limpieza de zonas afectadas', 'Reubicación y prevención de anidamiento'],
+    porQueActuar:
+      'Son vectores del virus de la rabia, por lo que es mejor realizar una exclusión cuidadosa.',
+    datos: ['Las hembras pueden almacenar esperma en su cuerpo todo el invierno y fertilizarse solo cuando el clima es ideal.', 'Pueden vivir de 20 a 30 años y regresar exactamente al mismo refugio si no se aplica un desalojo profesional.'],
   },
   {
     slug: 'aves',
@@ -160,10 +168,13 @@ export const plagas: Plaga[] = [
     fotoAlt: 'Paloma doméstica sobre piso de adoquín',
     resumen: 'Control de palomas y otras aves en edificios y naves.',
     descripcion:
-      'Las aves anidan en cornisas, estructuras y naves industriales. Su excremento deteriora superficies y ensucia áreas de trabajo, por lo que el objetivo es alejarlas sin lastimarlas.',
+      'Las palomas son aves inofensivas, pero su excremento es altamente corrosivo para la cantera, el metal y la pintura. Además, albergan ácaros y hongos infecciosos como Cryptococcus. Se controlan mediante sistemas de exclusión, disuasión física y sanitización para erradicar parásitos y bacterias sin dañar a las aves.',
     senales: ['Excremento en fachadas y estructuras', 'Nidos en cornisas o vigas', 'Bloqueo de canaletas y ductos'],
     riesgos: ['Deterioro de estructuras', 'Contaminación de producto y áreas de trabajo'],
     metodos: ['Repelentes', 'Hidrolavado de superficies', 'Trampas de captura y reubicación'],
+    porQueActuar:
+      'Obstruyen bajantes de agua de lluvia, dañan paneles solares y crean focos de insalubridad en balcones y fachadas. Se aplica fumigación líquida o nebulización para eliminar ácaros, piojos y garrapatas.',
+    datos: ['Pueden criar hasta 6 veces al año gracias a la abundancia de desperdicios en las ciudades.'],
   },
   {
     slug: 'abejas',
@@ -174,10 +185,13 @@ export const plagas: Plaga[] = [
     fotoAlt: 'Enjambre de abejas colgando de una estructura',
     resumen: 'Atención segura de enjambres y panales.',
     descripcion:
-      'Un enjambre cerca de personas requiere atención especializada. Las abejas africanizadas pueden defender su colonia con rapidez, así que no intentes moverlas por tu cuenta.',
+      'Las abejas africanizadas tienen un comportamiento hiperdefensivo: ante cualquier ruido o vibración atacan en enjambres masivos, provocando picaduras dolorosas. Por eso se deben tratar con cuidado para su retiro.',
     senales: ['Enjambre en muros, árboles o techos', 'Tránsito constante de abejas por un hueco', 'Panal visible'],
     riesgos: ['Picaduras múltiples', 'Reacciones alérgicas graves'],
     metodos: ['Evaluación del enjambre', 'Equipo de protección especializado', 'Reubicación cuando es posible'],
+    porQueActuar:
+      'Establecen panales en muros, jardines o falsos plafones, volviendo peligroso el tránsito en áreas comunes.',
+    datos: ['Su reina nace en solo 14 días, lo que les permite multiplicar sus colonias mucho más rápido que la abeja común.', 'Se dividen y buscan nuevos lugares para colonizar hasta 4 veces más rápido que otras especies.'],
   },
   {
     slug: 'avispas',
@@ -188,10 +202,13 @@ export const plagas: Plaga[] = [
     fotoAlt: 'Avispas sobre su nido',
     resumen: 'Retiro seguro de nidos en interiores y exteriores.',
     descripcion:
-      'Las avispas construyen nidos en aleros, techos y estructuras. Pueden atacar cuando se sienten amenazadas, por lo que el retiro debe hacerlo personal con equipo adecuado.',
+      'A diferencia de las abejas, las avispas no pierden el aguijón y pueden picar múltiples veces a una persona, inyectando veneno que puede causar shock anafiláctico. Construyen nidos en techos, aleros, cavidades de paredes o jardines cercanos, y representan un peligro por sus picaduras y posibles daños a la infraestructura, por lo que hay que eliminar los avisperos exteriores con total seguridad.',
     senales: ['Nidos en aleros o techos', 'Vuelo constante en un mismo punto', 'Avistamientos cerca de alimentos'],
     riesgos: ['Picaduras dolorosas', 'Reacciones alérgicas'],
     metodos: ['Localización del nido', 'Aplicación dirigida', 'Retiro y prevención'],
+    porQueActuar:
+      'Construyen avisperos cerca de marcos de ventanas, techos y puertas, inhabilitando el uso seguro de tus áreas exteriores.',
+    datos: ['En invierno muere toda la colonia, excepto las reinas fertilizadas, que despiertan en primavera para construir un nuevo avispero desde cero.'],
   },
 ];
 
