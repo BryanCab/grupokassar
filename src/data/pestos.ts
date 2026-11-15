@@ -4,7 +4,8 @@ import agenda from '../assets/pestos/tel-agenda.webp';
 import reporte from '../assets/pestos/tel-reporte.webp';
 import constancia from '../assets/pestos/tel-constancia.webp';
 import monitoreo from '../assets/pestos/tel-monitoreo.webp';
-import mapa from '../assets/pestos/tel-mapa.webp';
+import revision from '../assets/pestos/tel-revision.webp';
+import cotizacion from '../assets/pestos/tel-cotizacion.webp';
 import type { ImageMetadata } from 'astro';
 
 /** Sitio de la plataforma que usa Grupo Kassar para documentar sus servicios */
@@ -42,7 +43,7 @@ export const pantallas = [
     titulo: 'Qué se encontró y qué se hizo, paso por paso.',
     texto: 'El técnico documenta hallazgos, producto aplicado, lote, fotos de antes y después, y firma de recibido.',
     imagen: reporte,
-    alt: 'Detalle de un reporte de servicio con hallazgos, fotos y trabajo realizado',
+    alt: 'Paso de diagnóstico de un reporte de servicio con las plagas detectadas',
     chips: ['Fotos antes y después', 'Firma de recibido'],
   },
   {
@@ -66,14 +67,24 @@ export const pantallas = [
     chips: ['Plano de tus instalaciones', 'Revisión por estación'],
   },
   {
-    id: 'actividad',
-    nombre: 'Actividad',
-    icono: 'ph:chart-line-up',
-    titulo: 'Dónde hay actividad y cómo evoluciona.',
-    texto: 'El mapa de calor muestra qué zonas se activan más con el tiempo, para actuar antes de que crezca el problema.',
-    imagen: mapa,
-    alt: 'Mapa de actividad de plagas sobre el plano del cliente',
-    chips: ['Mapa de actividad', 'Tendencias'],
+    id: 'revision',
+    nombre: 'Revisión',
+    icono: 'ph:list-checks',
+    titulo: 'Cada punto de control, revisado.',
+    texto: 'En cada visita el técnico revisa las estaciones y registra si hubo actividad, captura o consumo. Queda el historial de cada una.',
+    imagen: revision,
+    alt: 'Lista de puntos de control con su estado de actividad',
+    chips: ['Registro por visita', 'Historial por estación'],
+  },
+  {
+    id: 'cotizaciones',
+    nombre: 'Cotizaciones',
+    icono: 'ph:receipt',
+    titulo: 'Presupuestos claros, listos para firmar.',
+    texto: 'Cada cotización detalla servicios, conceptos, IVA y condiciones, y se entrega como PDF con folio.',
+    imagen: cotizacion,
+    alt: 'Lista de cotizaciones generadas con folio, fecha y monto',
+    chips: ['Folio por cotización', 'PDF para firma'],
   },
   {
     id: 'expediente',
@@ -87,16 +98,16 @@ export const pantallas = [
   },
 ] as const;
 
-export const pantallasResumen = ['portal', 'agenda', 'reportes', 'constancias', 'monitoreo'];
+export const pantallasResumen = ['portal', 'agenda', 'reportes', 'constancias', 'monitoreo', 'cotizaciones'];
 
 /** Piezas de cada servicio: lo que el cliente recibe */
 export const entregables = [
   { icono: 'ph:clipboard-text', titulo: 'Reporte de servicio', texto: 'Hallazgos, trabajo realizado, productos con lote y registro, fotos y firma.' },
   { icono: 'ph:seal-check', titulo: 'Constancia de servicio', texto: 'Folio único, tratamiento, plaga objetivo, control empleado y datos del técnico.' },
   { icono: 'ph:calendar-dots', titulo: 'Calendario anual', texto: 'Programación de visitas del año, para que sepas cuándo viene el servicio.' },
+  { icono: 'ph:receipt', titulo: 'Cotizaciones', texto: 'Presupuestos con desglose, IVA y condiciones, en PDF con folio.' },
   { icono: 'ph:folder-simple-lock', titulo: 'Documentación', texto: 'Registros, seguros, fichas técnicas y de seguridad, siempre vigentes y a la mano.' },
   { icono: 'ph:map-pin-area', titulo: 'Plano de monitoreo', texto: 'Estaciones ubicadas en tu plano, con su historial de revisiones.' },
-  { icono: 'ph:bell-ringing', titulo: 'Seguimiento', texto: 'Solicita una cita, consulta el estado de tu solicitud y recibe avisos.' },
 ];
 
 export const flujo = [
@@ -156,6 +167,15 @@ export const abanicos = [
     texto: 'El comprobante formal de cada visita: folio, plagas identificadas, control empleado, productos y datos del técnico.',
     muestra: [1, 2, 3, 4],
     pdf: '/documentos/constancia-servicio-grupo-kassar.pdf',
+  },
+  {
+    id: 'cotizacion',
+    pestana: 'Cotización',
+    paginasTotal: 2,
+    titulo: 'Cotización de servicio',
+    texto: 'Desglose de conceptos, IVA, condiciones y garantía. Aquí, dos ejemplos: un restaurante con contrato mensual y una casa habitación.',
+    muestra: [1, 2],
+    pdf: '/documentos/cotizacion-grupo-kassar.pdf',
   },
 ].map((d) => ({
   ...d,
